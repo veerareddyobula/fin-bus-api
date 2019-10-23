@@ -1,0 +1,73 @@
+type Query {
+  feed: [Post!]!
+  drafts: [Post!]!
+  post(id: ID!): Post
+  codeByName(name: String!): Code!
+}
+
+type Mutation {
+  createDraft(title: String!, content: String): Post
+  deletePost(id: ID!): Post
+  publish(id: ID!): Post
+  signup( regOrgUnitName: String!
+    		,displayOrgUnitName: String!
+    		,orgUnitAddress: String!
+    		,firstName: String!
+    		,lastName: String!
+    		,email: String!
+    		,password: String!
+    		,mobileNumber:  String!): AuthPayload
+  # login(email: String!, password: String!): AuthPayload
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type Post {
+  id: ID!
+  published: Boolean!
+  title: String!
+  content: String!
+}
+
+type Code {
+  id: ID!
+  name: String
+  description: String
+  codeValueId: [CodeValue]
+}
+
+type CodeValue {
+  id: ID!
+  name: String
+  description: String
+  sequenceOrder: Int
+  codeId: Code!
+}
+
+type OrgUnit {
+  id: ID!
+  registeredName: String!
+  displayName: String!
+  address: String!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  orgUnitId: OrgUnit!
+  contactId: [ContactDetail]
+  isOrgUnitPrimaryContact: Boolean
+}
+
+type ContactDetail {
+  id: ID!
+  user: User!
+  detailTypeId: CodeValue!
+  value: String!
+}

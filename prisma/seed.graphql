@@ -1,0 +1,54 @@
+mutation {
+  contactCode: createCode(
+    data: {
+      name: "Contact Details Info",
+      description: "This codeId refers with user contact info",
+      codeValueId: {
+        create: [{
+          name: "Mobile Number",
+          description: "User mobile number",
+          sequenceOrder: 1
+        },{
+          name: "Address",
+          description: "User Address",
+          sequenceOrder: 2
+        },{
+          name: "About",
+          description: "About User",
+          sequenceOrder: 3
+        }]
+      }
+    }
+  ) {
+    id
+  }
+  
+  post1: createPost(
+    data: {
+      title: "Join us for GraphQL Conf 2019 in Berlin"
+      content: "https://www.graphqlconf.org/"
+      published: true
+    }
+  ) {
+    id
+  }
+
+  post2: createPost(
+    data: {
+      title: "Subscribe to GraphQL Weekly for community news"
+      content: "https://graphqlweekly.com/"
+      published: true
+    }
+  ) {
+    id
+  }
+
+  post3: createPost(
+    data: {
+      title: "Follow Prisma on Twitter"
+      content: "https://twitter.com/prisma"
+    }
+  ) {
+    id
+  }
+}

@@ -1,0 +1,46 @@
+type Post {
+  id: ID! @id
+  published: Boolean! @default(value: false)
+  title: String!
+  content: String!
+}
+
+type Code {
+  id: ID! @id
+  name: String @unique
+  description: String
+  codeValueId: [CodeValue]
+}
+
+type CodeValue {
+  id: ID! @id
+  name: String
+  description: String
+  sequenceOrder: Int
+  codeId: Code!
+}
+
+type OrgUnit {
+  id: ID! @id
+  registeredName: String!
+  displayName: String!
+  address: String!
+}
+
+type User {
+  id: ID! @id
+  firstName: String!
+  lastName: String!
+  email: String! @unique
+  password: String!
+  orgUnitId: OrgUnit!
+  contactId: [ContactDetail]
+  isOrgUnitPrimaryContact: Boolean
+}
+
+type ContactDetail {
+  id: ID! @id
+  user: User!
+  detailTypeId: CodeValue!
+  value: String!
+}
