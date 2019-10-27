@@ -27,11 +27,15 @@ var models = [
   {
     name: "ContactDetail",
     embedded: false
+  },
+  {
+    name: "OrgAccessTokens",
+    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466`
+  endpoint: `${process.env["PRISMA_DEV_SECRET"]}`
 });
 exports.prisma = new exports.Prisma();

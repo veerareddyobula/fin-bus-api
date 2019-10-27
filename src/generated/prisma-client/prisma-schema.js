@@ -15,6 +15,10 @@ type AggregateContactDetail {
   count: Int!
 }
 
+type AggregateOrgAccessTokens {
+  count: Int!
+}
+
 type AggregateOrgUnit {
   count: Int!
 }
@@ -661,6 +665,12 @@ type Mutation {
   upsertContactDetail(where: ContactDetailWhereUniqueInput!, create: ContactDetailCreateInput!, update: ContactDetailUpdateInput!): ContactDetail!
   deleteContactDetail(where: ContactDetailWhereUniqueInput!): ContactDetail
   deleteManyContactDetails(where: ContactDetailWhereInput): BatchPayload!
+  createOrgAccessTokens(data: OrgAccessTokensCreateInput!): OrgAccessTokens!
+  updateOrgAccessTokens(data: OrgAccessTokensUpdateInput!, where: OrgAccessTokensWhereUniqueInput!): OrgAccessTokens
+  updateManyOrgAccessTokenses(data: OrgAccessTokensUpdateManyMutationInput!, where: OrgAccessTokensWhereInput): BatchPayload!
+  upsertOrgAccessTokens(where: OrgAccessTokensWhereUniqueInput!, create: OrgAccessTokensCreateInput!, update: OrgAccessTokensUpdateInput!): OrgAccessTokens!
+  deleteOrgAccessTokens(where: OrgAccessTokensWhereUniqueInput!): OrgAccessTokens
+  deleteManyOrgAccessTokenses(where: OrgAccessTokensWhereInput): BatchPayload!
   createOrgUnit(data: OrgUnitCreateInput!): OrgUnit!
   updateOrgUnit(data: OrgUnitUpdateInput!, where: OrgUnitWhereUniqueInput!): OrgUnit
   updateManyOrgUnits(data: OrgUnitUpdateManyMutationInput!, where: OrgUnitWhereInput): BatchPayload!
@@ -689,6 +699,112 @@ enum MutationType {
 
 interface Node {
   id: ID!
+}
+
+type OrgAccessTokens {
+  id: ID!
+  orgUnitId: OrgUnit
+  userId: User
+  token: String!
+}
+
+type OrgAccessTokensConnection {
+  pageInfo: PageInfo!
+  edges: [OrgAccessTokensEdge]!
+  aggregate: AggregateOrgAccessTokens!
+}
+
+input OrgAccessTokensCreateInput {
+  id: ID
+  orgUnitId: OrgUnitCreateOneInput
+  userId: UserCreateOneInput
+  token: String!
+}
+
+type OrgAccessTokensEdge {
+  node: OrgAccessTokens!
+  cursor: String!
+}
+
+enum OrgAccessTokensOrderByInput {
+  id_ASC
+  id_DESC
+  token_ASC
+  token_DESC
+}
+
+type OrgAccessTokensPreviousValues {
+  id: ID!
+  token: String!
+}
+
+type OrgAccessTokensSubscriptionPayload {
+  mutation: MutationType!
+  node: OrgAccessTokens
+  updatedFields: [String!]
+  previousValues: OrgAccessTokensPreviousValues
+}
+
+input OrgAccessTokensSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OrgAccessTokensWhereInput
+  AND: [OrgAccessTokensSubscriptionWhereInput!]
+  OR: [OrgAccessTokensSubscriptionWhereInput!]
+  NOT: [OrgAccessTokensSubscriptionWhereInput!]
+}
+
+input OrgAccessTokensUpdateInput {
+  orgUnitId: OrgUnitUpdateOneInput
+  userId: UserUpdateOneInput
+  token: String
+}
+
+input OrgAccessTokensUpdateManyMutationInput {
+  token: String
+}
+
+input OrgAccessTokensWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  orgUnitId: OrgUnitWhereInput
+  userId: UserWhereInput
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_lt: String
+  token_lte: String
+  token_gt: String
+  token_gte: String
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  AND: [OrgAccessTokensWhereInput!]
+  OR: [OrgAccessTokensWhereInput!]
+  NOT: [OrgAccessTokensWhereInput!]
+}
+
+input OrgAccessTokensWhereUniqueInput {
+  id: ID
+  token: String
 }
 
 type OrgUnit {
@@ -773,6 +889,15 @@ input OrgUnitUpdateManyMutationInput {
   registeredName: String
   displayName: String
   address: String
+}
+
+input OrgUnitUpdateOneInput {
+  create: OrgUnitCreateInput
+  update: OrgUnitUpdateDataInput
+  upsert: OrgUnitUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: OrgUnitWhereUniqueInput
 }
 
 input OrgUnitUpdateOneRequiredInput {
@@ -997,6 +1122,9 @@ type Query {
   contactDetail(where: ContactDetailWhereUniqueInput!): ContactDetail
   contactDetails(where: ContactDetailWhereInput, orderBy: ContactDetailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContactDetail]!
   contactDetailsConnection(where: ContactDetailWhereInput, orderBy: ContactDetailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContactDetailConnection!
+  orgAccessTokens(where: OrgAccessTokensWhereUniqueInput!): OrgAccessTokens
+  orgAccessTokenses(where: OrgAccessTokensWhereInput, orderBy: OrgAccessTokensOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgAccessTokens]!
+  orgAccessTokensesConnection(where: OrgAccessTokensWhereInput, orderBy: OrgAccessTokensOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgAccessTokensConnection!
   orgUnit(where: OrgUnitWhereUniqueInput!): OrgUnit
   orgUnits(where: OrgUnitWhereInput, orderBy: OrgUnitOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgUnit]!
   orgUnitsConnection(where: OrgUnitWhereInput, orderBy: OrgUnitOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgUnitConnection!
@@ -1013,6 +1141,7 @@ type Subscription {
   code(where: CodeSubscriptionWhereInput): CodeSubscriptionPayload
   codeValue(where: CodeValueSubscriptionWhereInput): CodeValueSubscriptionPayload
   contactDetail(where: ContactDetailSubscriptionWhereInput): ContactDetailSubscriptionPayload
+  orgAccessTokens(where: OrgAccessTokensSubscriptionWhereInput): OrgAccessTokensSubscriptionPayload
   orgUnit(where: OrgUnitSubscriptionWhereInput): OrgUnitSubscriptionPayload
   post(where: PostSubscriptionWhereInput): PostSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
@@ -1044,6 +1173,11 @@ input UserCreateInput {
   orgUnitId: OrgUnitCreateOneInput!
   contactId: ContactDetailCreateManyWithoutUserInput
   isOrgUnitPrimaryContact: Boolean
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutContactIdInput {
@@ -1108,6 +1242,16 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+  orgUnitId: OrgUnitUpdateOneRequiredInput
+  contactId: ContactDetailUpdateManyWithoutUserInput
+  isOrgUnitPrimaryContact: Boolean
+}
+
 input UserUpdateInput {
   firstName: String
   lastName: String
@@ -1126,6 +1270,15 @@ input UserUpdateManyMutationInput {
   isOrgUnitPrimaryContact: Boolean
 }
 
+input UserUpdateOneInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneRequiredWithoutContactIdInput {
   create: UserCreateWithoutContactIdInput
   update: UserUpdateWithoutContactIdDataInput
@@ -1140,6 +1293,11 @@ input UserUpdateWithoutContactIdDataInput {
   password: String
   orgUnitId: OrgUnitUpdateOneRequiredInput
   isOrgUnitPrimaryContact: Boolean
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutContactIdInput {

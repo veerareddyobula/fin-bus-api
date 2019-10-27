@@ -19,6 +19,7 @@ export interface Exists {
   code: (where?: CodeWhereInput) => Promise<boolean>;
   codeValue: (where?: CodeValueWhereInput) => Promise<boolean>;
   contactDetail: (where?: ContactDetailWhereInput) => Promise<boolean>;
+  orgAccessTokens: (where?: OrgAccessTokensWhereInput) => Promise<boolean>;
   orgUnit: (where?: OrgUnitWhereInput) => Promise<boolean>;
   post: (where?: PostWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
@@ -102,6 +103,27 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => ContactDetailConnectionPromise;
+  orgAccessTokens: (
+    where: OrgAccessTokensWhereUniqueInput
+  ) => OrgAccessTokensNullablePromise;
+  orgAccessTokenses: (args?: {
+    where?: OrgAccessTokensWhereInput;
+    orderBy?: OrgAccessTokensOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<OrgAccessTokens>;
+  orgAccessTokensesConnection: (args?: {
+    where?: OrgAccessTokensWhereInput;
+    orderBy?: OrgAccessTokensOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => OrgAccessTokensConnectionPromise;
   orgUnit: (where: OrgUnitWhereUniqueInput) => OrgUnitNullablePromise;
   orgUnits: (args?: {
     where?: OrgUnitWhereInput;
@@ -217,6 +239,28 @@ export interface Prisma {
   deleteManyContactDetails: (
     where?: ContactDetailWhereInput
   ) => BatchPayloadPromise;
+  createOrgAccessTokens: (
+    data: OrgAccessTokensCreateInput
+  ) => OrgAccessTokensPromise;
+  updateOrgAccessTokens: (args: {
+    data: OrgAccessTokensUpdateInput;
+    where: OrgAccessTokensWhereUniqueInput;
+  }) => OrgAccessTokensPromise;
+  updateManyOrgAccessTokenses: (args: {
+    data: OrgAccessTokensUpdateManyMutationInput;
+    where?: OrgAccessTokensWhereInput;
+  }) => BatchPayloadPromise;
+  upsertOrgAccessTokens: (args: {
+    where: OrgAccessTokensWhereUniqueInput;
+    create: OrgAccessTokensCreateInput;
+    update: OrgAccessTokensUpdateInput;
+  }) => OrgAccessTokensPromise;
+  deleteOrgAccessTokens: (
+    where: OrgAccessTokensWhereUniqueInput
+  ) => OrgAccessTokensPromise;
+  deleteManyOrgAccessTokenses: (
+    where?: OrgAccessTokensWhereInput
+  ) => BatchPayloadPromise;
   createOrgUnit: (data: OrgUnitCreateInput) => OrgUnitPromise;
   updateOrgUnit: (args: {
     data: OrgUnitUpdateInput;
@@ -283,6 +327,9 @@ export interface Subscription {
   contactDetail: (
     where?: ContactDetailSubscriptionWhereInput
   ) => ContactDetailSubscriptionPayloadSubscription;
+  orgAccessTokens: (
+    where?: OrgAccessTokensSubscriptionWhereInput
+  ) => OrgAccessTokensSubscriptionPayloadSubscription;
   orgUnit: (
     where?: OrgUnitSubscriptionWhereInput
   ) => OrgUnitSubscriptionPayloadSubscription;
@@ -310,7 +357,11 @@ export type CodeOrderByInput =
   | "description_ASC"
   | "description_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+export type ContactDetailOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "value_ASC"
+  | "value_DESC";
 
 export type CodeValueOrderByInput =
   | "id_ASC"
@@ -322,11 +373,11 @@ export type CodeValueOrderByInput =
   | "sequenceOrder_ASC"
   | "sequenceOrder_DESC";
 
-export type ContactDetailOrderByInput =
+export type OrgAccessTokensOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "value_ASC"
-  | "value_DESC";
+  | "token_ASC"
+  | "token_DESC";
 
 export type OrgUnitOrderByInput =
   | "id_ASC"
@@ -362,21 +413,11 @@ export type UserOrderByInput =
   | "isOrgUnitPrimaryContact_ASC"
   | "isOrgUnitPrimaryContact_DESC";
 
-export interface ContactDetailUpdateManyMutationInput {
-  value?: Maybe<String>;
-}
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface OrgUnitUpdateDataInput {
-  registeredName?: Maybe<String>;
-  displayName?: Maybe<String>;
-  address?: Maybe<String>;
-}
-
-export interface CodeValueUpdateDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
+export interface CodeCreateOneWithoutCodeValueIdInput {
+  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
+  connect?: Maybe<CodeWhereUniqueInput>;
 }
 
 export type CodeWhereUniqueInput = AtLeastOne<{
@@ -384,11 +425,577 @@ export type CodeWhereUniqueInput = AtLeastOne<{
   name?: Maybe<String>;
 }>;
 
-export interface CodeValueUpdateOneRequiredInput {
-  create?: Maybe<CodeValueCreateInput>;
-  update?: Maybe<CodeValueUpdateDataInput>;
-  upsert?: Maybe<CodeValueUpsertNestedInput>;
-  connect?: Maybe<CodeValueWhereUniqueInput>;
+export interface ContactDetailCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  detailTypeId: CodeValueCreateOneInput;
+  value: String;
+}
+
+export interface CodeValueUpsertNestedInput {
+  update: CodeValueUpdateDataInput;
+  create: CodeValueCreateInput;
+}
+
+export interface ContactDetailCreateManyWithoutUserInput {
+  create?: Maybe<
+    ContactDetailCreateWithoutUserInput[] | ContactDetailCreateWithoutUserInput
+  >;
+  connect?: Maybe<
+    ContactDetailWhereUniqueInput[] | ContactDetailWhereUniqueInput
+  >;
+}
+
+export interface CodeUpsertWithoutCodeValueIdInput {
+  update: CodeUpdateWithoutCodeValueIdDataInput;
+  create: CodeCreateWithoutCodeValueIdInput;
+}
+
+export interface PostSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<PostWhereInput>;
+  AND?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
+  OR?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
+  NOT?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
+}
+
+export type CodeValueWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CodeCreateInput {
+  id?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  codeValueId?: Maybe<CodeValueCreateManyWithoutCodeIdInput>;
+}
+
+export interface ContactDetailSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ContactDetailWhereInput>;
+  AND?: Maybe<
+    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
+  >;
+}
+
+export interface CodeValueCreateManyWithoutCodeIdInput {
+  create?: Maybe<
+    CodeValueCreateWithoutCodeIdInput[] | CodeValueCreateWithoutCodeIdInput
+  >;
+  connect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+}
+
+export type ContactDetailWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CodeValueCreateWithoutCodeIdInput {
+  id?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+}
+
+export interface UserUpdateManyMutationInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface CodeUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  codeValueId?: Maybe<CodeValueUpdateManyWithoutCodeIdInput>;
+}
+
+export interface ContactDetailWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  user?: Maybe<UserWhereInput>;
+  detailTypeId?: Maybe<CodeValueWhereInput>;
+  value?: Maybe<String>;
+  value_not?: Maybe<String>;
+  value_in?: Maybe<String[] | String>;
+  value_not_in?: Maybe<String[] | String>;
+  value_lt?: Maybe<String>;
+  value_lte?: Maybe<String>;
+  value_gt?: Maybe<String>;
+  value_gte?: Maybe<String>;
+  value_contains?: Maybe<String>;
+  value_not_contains?: Maybe<String>;
+  value_starts_with?: Maybe<String>;
+  value_not_starts_with?: Maybe<String>;
+  value_ends_with?: Maybe<String>;
+  value_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
+  OR?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
+  NOT?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
+}
+
+export interface CodeValueUpdateManyWithoutCodeIdInput {
+  create?: Maybe<
+    CodeValueCreateWithoutCodeIdInput[] | CodeValueCreateWithoutCodeIdInput
+  >;
+  delete?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+  connect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+  set?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+  disconnect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+  update?: Maybe<
+    | CodeValueUpdateWithWhereUniqueWithoutCodeIdInput[]
+    | CodeValueUpdateWithWhereUniqueWithoutCodeIdInput
+  >;
+  upsert?: Maybe<
+    | CodeValueUpsertWithWhereUniqueWithoutCodeIdInput[]
+    | CodeValueUpsertWithWhereUniqueWithoutCodeIdInput
+  >;
+  deleteMany?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
+  updateMany?: Maybe<
+    | CodeValueUpdateManyWithWhereNestedInput[]
+    | CodeValueUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OrgUnitWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  registeredName?: Maybe<String>;
+  registeredName_not?: Maybe<String>;
+  registeredName_in?: Maybe<String[] | String>;
+  registeredName_not_in?: Maybe<String[] | String>;
+  registeredName_lt?: Maybe<String>;
+  registeredName_lte?: Maybe<String>;
+  registeredName_gt?: Maybe<String>;
+  registeredName_gte?: Maybe<String>;
+  registeredName_contains?: Maybe<String>;
+  registeredName_not_contains?: Maybe<String>;
+  registeredName_starts_with?: Maybe<String>;
+  registeredName_not_starts_with?: Maybe<String>;
+  registeredName_ends_with?: Maybe<String>;
+  registeredName_not_ends_with?: Maybe<String>;
+  displayName?: Maybe<String>;
+  displayName_not?: Maybe<String>;
+  displayName_in?: Maybe<String[] | String>;
+  displayName_not_in?: Maybe<String[] | String>;
+  displayName_lt?: Maybe<String>;
+  displayName_lte?: Maybe<String>;
+  displayName_gt?: Maybe<String>;
+  displayName_gte?: Maybe<String>;
+  displayName_contains?: Maybe<String>;
+  displayName_not_contains?: Maybe<String>;
+  displayName_starts_with?: Maybe<String>;
+  displayName_not_starts_with?: Maybe<String>;
+  displayName_ends_with?: Maybe<String>;
+  displayName_not_ends_with?: Maybe<String>;
+  address?: Maybe<String>;
+  address_not?: Maybe<String>;
+  address_in?: Maybe<String[] | String>;
+  address_not_in?: Maybe<String[] | String>;
+  address_lt?: Maybe<String>;
+  address_lte?: Maybe<String>;
+  address_gt?: Maybe<String>;
+  address_gte?: Maybe<String>;
+  address_contains?: Maybe<String>;
+  address_not_contains?: Maybe<String>;
+  address_starts_with?: Maybe<String>;
+  address_not_starts_with?: Maybe<String>;
+  address_ends_with?: Maybe<String>;
+  address_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
+  OR?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
+  NOT?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
+}
+
+export interface CodeValueUpdateWithWhereUniqueWithoutCodeIdInput {
+  where: CodeValueWhereUniqueInput;
+  data: CodeValueUpdateWithoutCodeIdDataInput;
+}
+
+export interface PostUpdateInput {
+  published?: Maybe<Boolean>;
+  title?: Maybe<String>;
+  content?: Maybe<String>;
+}
+
+export interface CodeValueUpdateWithoutCodeIdDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+}
+
+export interface OrgUnitUpdateManyMutationInput {
+  registeredName?: Maybe<String>;
+  displayName?: Maybe<String>;
+  address?: Maybe<String>;
+}
+
+export interface CodeValueUpsertWithWhereUniqueWithoutCodeIdInput {
+  where: CodeValueWhereUniqueInput;
+  update: CodeValueUpdateWithoutCodeIdDataInput;
+  create: CodeValueCreateWithoutCodeIdInput;
+}
+
+export interface OrgUnitUpdateInput {
+  registeredName?: Maybe<String>;
+  displayName?: Maybe<String>;
+  address?: Maybe<String>;
+}
+
+export interface CodeValueScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  sequenceOrder_not?: Maybe<Int>;
+  sequenceOrder_in?: Maybe<Int[] | Int>;
+  sequenceOrder_not_in?: Maybe<Int[] | Int>;
+  sequenceOrder_lt?: Maybe<Int>;
+  sequenceOrder_lte?: Maybe<Int>;
+  sequenceOrder_gt?: Maybe<Int>;
+  sequenceOrder_gte?: Maybe<Int>;
+  AND?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
+  OR?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
+  NOT?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
+}
+
+export interface CodeWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  codeValueId_every?: Maybe<CodeValueWhereInput>;
+  codeValueId_some?: Maybe<CodeValueWhereInput>;
+  codeValueId_none?: Maybe<CodeValueWhereInput>;
+  AND?: Maybe<CodeWhereInput[] | CodeWhereInput>;
+  OR?: Maybe<CodeWhereInput[] | CodeWhereInput>;
+  NOT?: Maybe<CodeWhereInput[] | CodeWhereInput>;
+}
+
+export interface CodeValueUpdateManyWithWhereNestedInput {
+  where: CodeValueScalarWhereInput;
+  data: CodeValueUpdateManyDataInput;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface CodeValueUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+}
+
+export type OrgUnitWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CodeUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface ContactDetailScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  value?: Maybe<String>;
+  value_not?: Maybe<String>;
+  value_in?: Maybe<String[] | String>;
+  value_not_in?: Maybe<String[] | String>;
+  value_lt?: Maybe<String>;
+  value_lte?: Maybe<String>;
+  value_gt?: Maybe<String>;
+  value_gte?: Maybe<String>;
+  value_contains?: Maybe<String>;
+  value_not_contains?: Maybe<String>;
+  value_starts_with?: Maybe<String>;
+  value_not_starts_with?: Maybe<String>;
+  value_ends_with?: Maybe<String>;
+  value_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+  OR?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+  NOT?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  lastName: String;
+  email: String;
+  password: String;
+  orgUnitId: OrgUnitCreateOneInput;
+  contactId?: Maybe<ContactDetailCreateManyWithoutUserInput>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface ContactDetailUpdateWithoutUserDataInput {
+  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
+  value?: Maybe<String>;
+}
+
+export interface UserCreateOneInput {
+  create?: Maybe<UserCreateInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface ContactDetailUpdateWithWhereUniqueWithoutUserInput {
+  where: ContactDetailWhereUniqueInput;
+  data: ContactDetailUpdateWithoutUserDataInput;
+}
+
+export interface CodeValueCreateInput {
+  id?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  codeId: CodeCreateOneWithoutCodeValueIdInput;
+}
+
+export interface CodeValueWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  sequenceOrder_not?: Maybe<Int>;
+  sequenceOrder_in?: Maybe<Int[] | Int>;
+  sequenceOrder_not_in?: Maybe<Int[] | Int>;
+  sequenceOrder_lt?: Maybe<Int>;
+  sequenceOrder_lte?: Maybe<Int>;
+  sequenceOrder_gt?: Maybe<Int>;
+  sequenceOrder_gte?: Maybe<Int>;
+  codeId?: Maybe<CodeWhereInput>;
+  AND?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
+  OR?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
+  NOT?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
+}
+
+export interface OrgAccessTokensCreateInput {
+  id?: Maybe<ID_Input>;
+  orgUnitId?: Maybe<OrgUnitCreateOneInput>;
+  userId?: Maybe<UserCreateOneInput>;
+  token: String;
+}
+
+export interface UserUpdateDataInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
+  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface CodeCreateWithoutCodeValueIdInput {
+  id?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface CodeValueUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
+}
+
+export interface OrgAccessTokensUpdateInput {
+  orgUnitId?: Maybe<OrgUnitUpdateOneInput>;
+  userId?: Maybe<UserUpdateOneInput>;
+  token?: Maybe<String>;
+}
+
+export interface CodeUpdateOneRequiredWithoutCodeValueIdInput {
+  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
+  update?: Maybe<CodeUpdateWithoutCodeValueIdDataInput>;
+  upsert?: Maybe<CodeUpsertWithoutCodeValueIdInput>;
+  connect?: Maybe<CodeWhereUniqueInput>;
+}
+
+export interface OrgUnitSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OrgUnitWhereInput>;
+  AND?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+  OR?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+  NOT?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+}
+
+export interface CodeUpdateWithoutCodeValueIdDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
 }
 
 export interface CodeValueSubscriptionWhereInput {
@@ -408,26 +1015,61 @@ export interface CodeValueSubscriptionWhereInput {
   >;
 }
 
-export interface CodeSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<CodeWhereInput>;
-  AND?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
-  OR?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
-  NOT?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
-}
-
-export interface ContactDetailUpdateManyDataInput {
+export interface ContactDetailUpdateManyMutationInput {
   value?: Maybe<String>;
 }
 
-export interface CodeCreateInput {
-  id?: Maybe<ID_Input>;
+export interface UserUpdateInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
+  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface CodeValueUpdateManyMutationInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
-  codeValueId?: Maybe<CodeValueCreateManyWithoutCodeIdInput>;
+  sequenceOrder?: Maybe<Int>;
+}
+
+export interface PostUpdateManyMutationInput {
+  published?: Maybe<Boolean>;
+  title?: Maybe<String>;
+  content?: Maybe<String>;
+}
+
+export interface ContactDetailCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutContactIdInput;
+  detailTypeId: CodeValueCreateOneInput;
+  value: String;
+}
+
+export type OrgAccessTokensWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  token?: Maybe<String>;
+}>;
+
+export interface UserCreateOneWithoutContactIdInput {
+  create?: Maybe<UserCreateWithoutContactIdInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface OrgAccessTokensUpdateManyMutationInput {
+  token?: Maybe<String>;
+}
+
+export interface UserCreateWithoutContactIdInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  lastName: String;
+  email: String;
+  password: String;
+  orgUnitId: OrgUnitCreateOneInput;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
 }
 
 export interface ContactDetailUpdateManyWithWhereNestedInput {
@@ -435,35 +1077,20 @@ export interface ContactDetailUpdateManyWithWhereNestedInput {
   data: ContactDetailUpdateManyDataInput;
 }
 
-export interface CodeValueCreateManyWithoutCodeIdInput {
-  create?: Maybe<
-    CodeValueCreateWithoutCodeIdInput[] | CodeValueCreateWithoutCodeIdInput
-  >;
-  connect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
+export interface OrgUnitCreateOneInput {
+  create?: Maybe<OrgUnitCreateInput>;
+  connect?: Maybe<OrgUnitWhereUniqueInput>;
 }
 
-export interface ContactDetailUpsertWithWhereUniqueWithoutUserInput {
-  where: ContactDetailWhereUniqueInput;
-  update: ContactDetailUpdateWithoutUserDataInput;
-  create: ContactDetailCreateWithoutUserInput;
-}
+export type PostWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
 
-export interface CodeValueCreateWithoutCodeIdInput {
+export interface OrgUnitCreateInput {
   id?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-}
-
-export interface ContactDetailUpdateWithoutUserDataInput {
-  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
-  value?: Maybe<String>;
-}
-
-export interface CodeUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  codeValueId?: Maybe<CodeValueUpdateManyWithoutCodeIdInput>;
+  registeredName: String;
+  displayName: String;
+  address: String;
 }
 
 export interface ContactDetailUpdateManyWithoutUserInput {
@@ -497,27 +1124,51 @@ export interface ContactDetailUpdateManyWithoutUserInput {
   >;
 }
 
-export interface CodeValueUpdateManyWithoutCodeIdInput {
-  create?: Maybe<
-    CodeValueCreateWithoutCodeIdInput[] | CodeValueCreateWithoutCodeIdInput
+export interface CodeValueCreateOneInput {
+  create?: Maybe<CodeValueCreateInput>;
+  connect?: Maybe<CodeValueWhereUniqueInput>;
+}
+
+export interface OrgUnitUpdateOneInput {
+  create?: Maybe<OrgUnitCreateInput>;
+  update?: Maybe<OrgUnitUpdateDataInput>;
+  upsert?: Maybe<OrgUnitUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<OrgUnitWhereUniqueInput>;
+}
+
+export interface ContactDetailUpdateInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutContactIdInput>;
+  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
+  value?: Maybe<String>;
+}
+
+export interface OrgAccessTokensSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OrgAccessTokensWhereInput>;
+  AND?: Maybe<
+    | OrgAccessTokensSubscriptionWhereInput[]
+    | OrgAccessTokensSubscriptionWhereInput
   >;
-  delete?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
-  connect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
-  set?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
-  disconnect?: Maybe<CodeValueWhereUniqueInput[] | CodeValueWhereUniqueInput>;
-  update?: Maybe<
-    | CodeValueUpdateWithWhereUniqueWithoutCodeIdInput[]
-    | CodeValueUpdateWithWhereUniqueWithoutCodeIdInput
+  OR?: Maybe<
+    | OrgAccessTokensSubscriptionWhereInput[]
+    | OrgAccessTokensSubscriptionWhereInput
   >;
-  upsert?: Maybe<
-    | CodeValueUpsertWithWhereUniqueWithoutCodeIdInput[]
-    | CodeValueUpsertWithWhereUniqueWithoutCodeIdInput
+  NOT?: Maybe<
+    | OrgAccessTokensSubscriptionWhereInput[]
+    | OrgAccessTokensSubscriptionWhereInput
   >;
-  deleteMany?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
-  updateMany?: Maybe<
-    | CodeValueUpdateManyWithWhereNestedInput[]
-    | CodeValueUpdateManyWithWhereNestedInput
-  >;
+}
+
+export interface UserUpdateOneRequiredWithoutContactIdInput {
+  create?: Maybe<UserCreateWithoutContactIdInput>;
+  update?: Maybe<UserUpdateWithoutContactIdDataInput>;
+  upsert?: Maybe<UserUpsertWithoutContactIdInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface UserWhereInput {
@@ -602,181 +1253,16 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface CodeValueUpdateWithWhereUniqueWithoutCodeIdInput {
-  where: CodeValueWhereUniqueInput;
-  data: CodeValueUpdateWithoutCodeIdDataInput;
-}
-
-export interface CodeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  codeValueId_every?: Maybe<CodeValueWhereInput>;
-  codeValueId_some?: Maybe<CodeValueWhereInput>;
-  codeValueId_none?: Maybe<CodeValueWhereInput>;
-  AND?: Maybe<CodeWhereInput[] | CodeWhereInput>;
-  OR?: Maybe<CodeWhereInput[] | CodeWhereInput>;
-  NOT?: Maybe<CodeWhereInput[] | CodeWhereInput>;
-}
-
-export interface CodeValueUpdateWithoutCodeIdDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-}
-
-export interface ContactDetailCreateWithoutUserInput {
-  id?: Maybe<ID_Input>;
-  detailTypeId: CodeValueCreateOneInput;
-  value: String;
-}
-
-export interface CodeValueUpsertWithWhereUniqueWithoutCodeIdInput {
-  where: CodeValueWhereUniqueInput;
-  update: CodeValueUpdateWithoutCodeIdDataInput;
-  create: CodeValueCreateWithoutCodeIdInput;
-}
-
-export type OrgUnitWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface CodeValueScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-  sequenceOrder_not?: Maybe<Int>;
-  sequenceOrder_in?: Maybe<Int[] | Int>;
-  sequenceOrder_not_in?: Maybe<Int[] | Int>;
-  sequenceOrder_lt?: Maybe<Int>;
-  sequenceOrder_lte?: Maybe<Int>;
-  sequenceOrder_gt?: Maybe<Int>;
-  sequenceOrder_gte?: Maybe<Int>;
-  AND?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
-  OR?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
-  NOT?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
-  orgUnitId: OrgUnitCreateOneInput;
-  contactId?: Maybe<ContactDetailCreateManyWithoutUserInput>;
+export interface UserUpdateWithoutContactIdDataInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
   isOrgUnitPrimaryContact?: Maybe<Boolean>;
 }
 
-export interface CodeValueUpdateManyWithWhereNestedInput {
-  where: CodeValueScalarWhereInput;
-  data: CodeValueUpdateManyDataInput;
-}
-
-export interface PostUpdateInput {
-  published?: Maybe<Boolean>;
-  title?: Maybe<String>;
-  content?: Maybe<String>;
-}
-
-export interface CodeValueUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-}
-
-export interface PostCreateInput {
-  id?: Maybe<ID_Input>;
-  published?: Maybe<Boolean>;
-  title: String;
-  content: String;
-}
-
-export interface CodeUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface CodeValueWhereInput {
+export interface OrgAccessTokensWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -791,46 +1277,67 @@ export interface CodeValueWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  orgUnitId?: Maybe<OrgUnitWhereInput>;
+  userId?: Maybe<UserWhereInput>;
+  token?: Maybe<String>;
+  token_not?: Maybe<String>;
+  token_in?: Maybe<String[] | String>;
+  token_not_in?: Maybe<String[] | String>;
+  token_lt?: Maybe<String>;
+  token_lte?: Maybe<String>;
+  token_gt?: Maybe<String>;
+  token_gte?: Maybe<String>;
+  token_contains?: Maybe<String>;
+  token_not_contains?: Maybe<String>;
+  token_starts_with?: Maybe<String>;
+  token_not_starts_with?: Maybe<String>;
+  token_ends_with?: Maybe<String>;
+  token_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OrgAccessTokensWhereInput[] | OrgAccessTokensWhereInput>;
+  OR?: Maybe<OrgAccessTokensWhereInput[] | OrgAccessTokensWhereInput>;
+  NOT?: Maybe<OrgAccessTokensWhereInput[] | OrgAccessTokensWhereInput>;
+}
+
+export interface OrgUnitUpdateOneRequiredInput {
+  create?: Maybe<OrgUnitCreateInput>;
+  update?: Maybe<OrgUnitUpdateDataInput>;
+  upsert?: Maybe<OrgUnitUpsertNestedInput>;
+  connect?: Maybe<OrgUnitWhereUniqueInput>;
+}
+
+export interface ContactDetailUpsertWithWhereUniqueWithoutUserInput {
+  where: ContactDetailWhereUniqueInput;
+  update: ContactDetailUpdateWithoutUserDataInput;
+  create: ContactDetailCreateWithoutUserInput;
+}
+
+export interface OrgUnitUpdateDataInput {
+  registeredName?: Maybe<String>;
+  displayName?: Maybe<String>;
+  address?: Maybe<String>;
+}
+
+export interface UserUpdateOneInput {
+  create?: Maybe<UserCreateInput>;
+  update?: Maybe<UserUpdateDataInput>;
+  upsert?: Maybe<UserUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface CodeValueUpdateDataInput {
   name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
   description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
-  sequenceOrder_not?: Maybe<Int>;
-  sequenceOrder_in?: Maybe<Int[] | Int>;
-  sequenceOrder_not_in?: Maybe<Int[] | Int>;
-  sequenceOrder_lt?: Maybe<Int>;
-  sequenceOrder_lte?: Maybe<Int>;
-  sequenceOrder_gt?: Maybe<Int>;
-  sequenceOrder_gte?: Maybe<Int>;
-  codeId?: Maybe<CodeWhereInput>;
-  AND?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
-  OR?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
-  NOT?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
+  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
+}
+
+export interface CodeValueUpdateOneRequiredInput {
+  create?: Maybe<CodeValueCreateInput>;
+  update?: Maybe<CodeValueUpdateDataInput>;
+  upsert?: Maybe<CodeValueUpsertNestedInput>;
+  connect?: Maybe<CodeValueWhereUniqueInput>;
 }
 
 export interface UserUpsertWithoutContactIdInput {
@@ -838,198 +1345,20 @@ export interface UserUpsertWithoutContactIdInput {
   create: UserCreateWithoutContactIdInput;
 }
 
-export interface OrgUnitUpdateInput {
-  registeredName?: Maybe<String>;
-  displayName?: Maybe<String>;
-  address?: Maybe<String>;
-}
-
 export interface OrgUnitUpsertNestedInput {
   update: OrgUnitUpdateDataInput;
   create: OrgUnitCreateInput;
 }
 
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
-
-export interface CodeValueCreateInput {
-  id?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-  codeId: CodeCreateOneWithoutCodeValueIdInput;
-}
-
-export interface CodeValueUpsertNestedInput {
-  update: CodeValueUpdateDataInput;
-  create: CodeValueCreateInput;
-}
-
-export interface CodeCreateOneWithoutCodeValueIdInput {
-  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
-  connect?: Maybe<CodeWhereUniqueInput>;
-}
-
-export interface UserUpdateManyMutationInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface CodeCreateWithoutCodeValueIdInput {
-  id?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface ContactDetailScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  value?: Maybe<String>;
-  value_not?: Maybe<String>;
-  value_in?: Maybe<String[] | String>;
-  value_not_in?: Maybe<String[] | String>;
-  value_lt?: Maybe<String>;
-  value_lte?: Maybe<String>;
-  value_gt?: Maybe<String>;
-  value_gte?: Maybe<String>;
-  value_contains?: Maybe<String>;
-  value_not_contains?: Maybe<String>;
-  value_starts_with?: Maybe<String>;
-  value_not_starts_with?: Maybe<String>;
-  value_ends_with?: Maybe<String>;
-  value_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
-  OR?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
-  NOT?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
-}
-
-export interface CodeValueUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
-}
-
-export interface ContactDetailUpdateWithWhereUniqueWithoutUserInput {
-  where: ContactDetailWhereUniqueInput;
-  data: ContactDetailUpdateWithoutUserDataInput;
-}
-
-export interface CodeUpdateOneRequiredWithoutCodeValueIdInput {
-  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
-  update?: Maybe<CodeUpdateWithoutCodeValueIdDataInput>;
-  upsert?: Maybe<CodeUpsertWithoutCodeValueIdInput>;
-  connect?: Maybe<CodeWhereUniqueInput>;
-}
-
-export interface OrgUnitWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  registeredName?: Maybe<String>;
-  registeredName_not?: Maybe<String>;
-  registeredName_in?: Maybe<String[] | String>;
-  registeredName_not_in?: Maybe<String[] | String>;
-  registeredName_lt?: Maybe<String>;
-  registeredName_lte?: Maybe<String>;
-  registeredName_gt?: Maybe<String>;
-  registeredName_gte?: Maybe<String>;
-  registeredName_contains?: Maybe<String>;
-  registeredName_not_contains?: Maybe<String>;
-  registeredName_starts_with?: Maybe<String>;
-  registeredName_not_starts_with?: Maybe<String>;
-  registeredName_ends_with?: Maybe<String>;
-  registeredName_not_ends_with?: Maybe<String>;
-  displayName?: Maybe<String>;
-  displayName_not?: Maybe<String>;
-  displayName_in?: Maybe<String[] | String>;
-  displayName_not_in?: Maybe<String[] | String>;
-  displayName_lt?: Maybe<String>;
-  displayName_lte?: Maybe<String>;
-  displayName_gt?: Maybe<String>;
-  displayName_gte?: Maybe<String>;
-  displayName_contains?: Maybe<String>;
-  displayName_not_contains?: Maybe<String>;
-  displayName_starts_with?: Maybe<String>;
-  displayName_not_starts_with?: Maybe<String>;
-  displayName_ends_with?: Maybe<String>;
-  displayName_not_ends_with?: Maybe<String>;
-  address?: Maybe<String>;
-  address_not?: Maybe<String>;
-  address_in?: Maybe<String[] | String>;
-  address_not_in?: Maybe<String[] | String>;
-  address_lt?: Maybe<String>;
-  address_lte?: Maybe<String>;
-  address_gt?: Maybe<String>;
-  address_gte?: Maybe<String>;
-  address_contains?: Maybe<String>;
-  address_not_contains?: Maybe<String>;
-  address_starts_with?: Maybe<String>;
-  address_not_starts_with?: Maybe<String>;
-  address_ends_with?: Maybe<String>;
-  address_not_ends_with?: Maybe<String>;
-  AND?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
-  OR?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
-  NOT?: Maybe<OrgUnitWhereInput[] | OrgUnitWhereInput>;
-}
-
-export interface CodeUpdateWithoutCodeValueIdDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface ContactDetailCreateManyWithoutUserInput {
-  create?: Maybe<
-    ContactDetailCreateWithoutUserInput[] | ContactDetailCreateWithoutUserInput
-  >;
-  connect?: Maybe<
-    ContactDetailWhereUniqueInput[] | ContactDetailWhereUniqueInput
-  >;
-}
-
-export interface CodeUpsertWithoutCodeValueIdInput {
-  update: CodeUpdateWithoutCodeValueIdDataInput;
-  create: CodeCreateWithoutCodeValueIdInput;
-}
-
-export interface PostUpdateManyMutationInput {
-  published?: Maybe<Boolean>;
-  title?: Maybe<String>;
-  content?: Maybe<String>;
-}
-
-export interface CodeValueUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
 }
 
 export interface PostWhereInput {
@@ -1082,186 +1411,26 @@ export interface PostWhereInput {
   NOT?: Maybe<PostWhereInput[] | PostWhereInput>;
 }
 
-export interface ContactDetailCreateInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutContactIdInput;
-  detailTypeId: CodeValueCreateOneInput;
-  value: String;
-}
-
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface UserCreateOneWithoutContactIdInput {
-  create?: Maybe<UserCreateWithoutContactIdInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface ContactDetailSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ContactDetailWhereInput>;
-  AND?: Maybe<
-    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    ContactDetailSubscriptionWhereInput[] | ContactDetailSubscriptionWhereInput
-  >;
-}
-
-export interface UserCreateWithoutContactIdInput {
-  id?: Maybe<ID_Input>;
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
-  orgUnitId: OrgUnitCreateOneInput;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export type ContactDetailWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface OrgUnitCreateOneInput {
-  create?: Maybe<OrgUnitCreateInput>;
-  connect?: Maybe<OrgUnitWhereUniqueInput>;
-}
-
-export interface UserUpdateInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
-  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface OrgUnitCreateInput {
-  id?: Maybe<ID_Input>;
-  registeredName: String;
-  displayName: String;
-  address: String;
-}
-
-export type PostWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface CodeValueCreateOneInput {
-  create?: Maybe<CodeValueCreateInput>;
-  connect?: Maybe<CodeValueWhereUniqueInput>;
-}
-
-export interface PostSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<PostWhereInput>;
-  AND?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
-  OR?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
-  NOT?: Maybe<PostSubscriptionWhereInput[] | PostSubscriptionWhereInput>;
-}
-
-export interface OrgUnitUpdateOneRequiredInput {
-  create?: Maybe<OrgUnitCreateInput>;
-  update?: Maybe<OrgUnitUpdateDataInput>;
-  upsert?: Maybe<OrgUnitUpsertNestedInput>;
-  connect?: Maybe<OrgUnitWhereUniqueInput>;
-}
-
-export interface UserUpdateWithoutContactIdDataInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface UserUpdateOneRequiredWithoutContactIdInput {
-  create?: Maybe<UserCreateWithoutContactIdInput>;
-  update?: Maybe<UserUpdateWithoutContactIdDataInput>;
-  upsert?: Maybe<UserUpsertWithoutContactIdInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface ContactDetailUpdateInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutContactIdInput>;
-  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
+export interface ContactDetailUpdateManyDataInput {
   value?: Maybe<String>;
 }
 
-export type CodeValueWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface OrgUnitUpdateManyMutationInput {
-  registeredName?: Maybe<String>;
-  displayName?: Maybe<String>;
-  address?: Maybe<String>;
+export interface PostCreateInput {
+  id?: Maybe<ID_Input>;
+  published?: Maybe<Boolean>;
+  title: String;
+  content: String;
 }
 
-export interface OrgUnitSubscriptionWhereInput {
+export interface CodeSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
   updatedFields_contains_every?: Maybe<String[] | String>;
   updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OrgUnitWhereInput>;
-  AND?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-  OR?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-  NOT?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-}
-
-export interface ContactDetailWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  user?: Maybe<UserWhereInput>;
-  detailTypeId?: Maybe<CodeValueWhereInput>;
-  value?: Maybe<String>;
-  value_not?: Maybe<String>;
-  value_in?: Maybe<String[] | String>;
-  value_not_in?: Maybe<String[] | String>;
-  value_lt?: Maybe<String>;
-  value_lte?: Maybe<String>;
-  value_gt?: Maybe<String>;
-  value_gte?: Maybe<String>;
-  value_contains?: Maybe<String>;
-  value_not_contains?: Maybe<String>;
-  value_starts_with?: Maybe<String>;
-  value_not_starts_with?: Maybe<String>;
-  value_ends_with?: Maybe<String>;
-  value_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
-  OR?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
-  NOT?: Maybe<ContactDetailWhereInput[] | ContactDetailWhereInput>;
+  node?: Maybe<CodeWhereInput>;
+  AND?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
+  OR?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
+  NOT?: Maybe<CodeSubscriptionWhereInput[] | CodeSubscriptionWhereInput>;
 }
 
 export interface NodeNode {
@@ -1299,346 +1468,6 @@ export interface UserPreviousValuesSubscription
   isOrgUnitPrimaryContact: () => Promise<AsyncIterator<Boolean>>;
 }
 
-export interface CodeValueEdge {
-  node: CodeValue;
-  cursor: String;
-}
-
-export interface CodeValueEdgePromise
-  extends Promise<CodeValueEdge>,
-    Fragmentable {
-  node: <T = CodeValuePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CodeValueEdgeSubscription
-  extends Promise<AsyncIterator<CodeValueEdge>>,
-    Fragmentable {
-  node: <T = CodeValueSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface PostSubscriptionPayload {
-  mutation: MutationType;
-  node: Post;
-  updatedFields: String[];
-  previousValues: PostPreviousValues;
-}
-
-export interface PostSubscriptionPayloadPromise
-  extends Promise<PostSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = PostPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = PostPreviousValuesPromise>() => T;
-}
-
-export interface PostSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<PostSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = PostSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = PostPreviousValuesSubscription>() => T;
-}
-
-export interface CodeValueConnection {
-  pageInfo: PageInfo;
-  edges: CodeValueEdge[];
-}
-
-export interface CodeValueConnectionPromise
-  extends Promise<CodeValueConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CodeValueEdge>>() => T;
-  aggregate: <T = AggregateCodeValuePromise>() => T;
-}
-
-export interface CodeValueConnectionSubscription
-  extends Promise<AsyncIterator<CodeValueConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CodeValueEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCodeValueSubscription>() => T;
-}
-
-export interface AggregateCode {
-  count: Int;
-}
-
-export interface AggregateCodePromise
-  extends Promise<AggregateCode>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCodeSubscription
-  extends Promise<AsyncIterator<AggregateCode>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface CodeEdge {
-  node: Code;
-  cursor: String;
-}
-
-export interface CodeEdgePromise extends Promise<CodeEdge>, Fragmentable {
-  node: <T = CodePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CodeEdgeSubscription
-  extends Promise<AsyncIterator<CodeEdge>>,
-    Fragmentable {
-  node: <T = CodeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregatePost {
-  count: Int;
-}
-
-export interface AggregatePostPromise
-  extends Promise<AggregatePost>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregatePostSubscription
-  extends Promise<AsyncIterator<AggregatePost>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface PostConnection {
-  pageInfo: PageInfo;
-  edges: PostEdge[];
-}
-
-export interface PostConnectionPromise
-  extends Promise<PostConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<PostEdge>>() => T;
-  aggregate: <T = AggregatePostPromise>() => T;
-}
-
-export interface PostConnectionSubscription
-  extends Promise<AsyncIterator<PostConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<PostEdgeSubscription>>>() => T;
-  aggregate: <T = AggregatePostSubscription>() => T;
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateOrgUnit {
-  count: Int;
-}
-
-export interface AggregateOrgUnitPromise
-  extends Promise<AggregateOrgUnit>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateOrgUnitSubscription
-  extends Promise<AsyncIterator<AggregateOrgUnit>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface CodeSubscriptionPayload {
-  mutation: MutationType;
-  node: Code;
-  updatedFields: String[];
-  previousValues: CodePreviousValues;
-}
-
-export interface CodeSubscriptionPayloadPromise
-  extends Promise<CodeSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = CodePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CodePreviousValuesPromise>() => T;
-}
-
-export interface CodeSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CodeSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CodeSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CodePreviousValuesSubscription>() => T;
-}
-
-export interface OrgUnitConnection {
-  pageInfo: PageInfo;
-  edges: OrgUnitEdge[];
-}
-
-export interface OrgUnitConnectionPromise
-  extends Promise<OrgUnitConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<OrgUnitEdge>>() => T;
-  aggregate: <T = AggregateOrgUnitPromise>() => T;
-}
-
-export interface OrgUnitConnectionSubscription
-  extends Promise<AsyncIterator<OrgUnitConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<OrgUnitEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateOrgUnitSubscription>() => T;
-}
-
-export interface CodePreviousValues {
-  id: ID_Output;
-  name?: String;
-  description?: String;
-}
-
-export interface CodePreviousValuesPromise
-  extends Promise<CodePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-}
-
-export interface CodePreviousValuesSubscription
-  extends Promise<AsyncIterator<CodePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ContactDetailEdge {
-  node: ContactDetail;
-  cursor: String;
-}
-
-export interface ContactDetailEdgePromise
-  extends Promise<ContactDetailEdge>,
-    Fragmentable {
-  node: <T = ContactDetailPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ContactDetailEdgeSubscription
-  extends Promise<AsyncIterator<ContactDetailEdge>>,
-    Fragmentable {
-  node: <T = ContactDetailSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface CodeConnection {
-  pageInfo: PageInfo;
-  edges: CodeEdge[];
-}
-
-export interface CodeConnectionPromise
-  extends Promise<CodeConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CodeEdge>>() => T;
-  aggregate: <T = AggregateCodePromise>() => T;
-}
-
-export interface CodeConnectionSubscription
-  extends Promise<AsyncIterator<CodeConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CodeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCodeSubscription>() => T;
-}
-
 export interface OrgUnit {
   id: ID_Output;
   registeredName: String;
@@ -1671,403 +1500,25 @@ export interface OrgUnitNullablePromise
   address: () => Promise<String>;
 }
 
-export interface CodeValueSubscriptionPayload {
-  mutation: MutationType;
-  node: CodeValue;
-  updatedFields: String[];
-  previousValues: CodeValuePreviousValues;
-}
-
-export interface CodeValueSubscriptionPayloadPromise
-  extends Promise<CodeValueSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = CodeValuePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CodeValuePreviousValuesPromise>() => T;
-}
-
-export interface CodeValueSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CodeValueSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CodeValueSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CodeValuePreviousValuesSubscription>() => T;
-}
-
-export interface ContactDetail {
-  id: ID_Output;
-  value: String;
-}
-
-export interface ContactDetailPromise
-  extends Promise<ContactDetail>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  detailTypeId: <T = CodeValuePromise>() => T;
-  value: () => Promise<String>;
-}
-
-export interface ContactDetailSubscription
-  extends Promise<AsyncIterator<ContactDetail>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
-  detailTypeId: <T = CodeValueSubscription>() => T;
-  value: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ContactDetailNullablePromise
-  extends Promise<ContactDetail | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  detailTypeId: <T = CodeValuePromise>() => T;
-  value: () => Promise<String>;
-}
-
-export interface CodeValuePreviousValues {
-  id: ID_Output;
-  name?: String;
-  description?: String;
-  sequenceOrder?: Int;
-}
-
-export interface CodeValuePreviousValuesPromise
-  extends Promise<CodeValuePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  sequenceOrder: () => Promise<Int>;
-}
-
-export interface CodeValuePreviousValuesSubscription
-  extends Promise<AsyncIterator<CodeValuePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  sequenceOrder: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface CodeValue {
-  id: ID_Output;
-  name?: String;
-  description?: String;
-  sequenceOrder?: Int;
-}
-
-export interface CodeValuePromise extends Promise<CodeValue>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  sequenceOrder: () => Promise<Int>;
-  codeId: <T = CodePromise>() => T;
-}
-
-export interface CodeValueSubscription
-  extends Promise<AsyncIterator<CodeValue>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  sequenceOrder: () => Promise<AsyncIterator<Int>>;
-  codeId: <T = CodeSubscription>() => T;
-}
-
-export interface CodeValueNullablePromise
-  extends Promise<CodeValue | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  sequenceOrder: () => Promise<Int>;
-  codeId: <T = CodePromise>() => T;
-}
-
-export interface PostEdge {
-  node: Post;
-  cursor: String;
-}
-
-export interface PostEdgePromise extends Promise<PostEdge>, Fragmentable {
-  node: <T = PostPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface PostEdgeSubscription
-  extends Promise<AsyncIterator<PostEdge>>,
-    Fragmentable {
-  node: <T = PostSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ContactDetailSubscriptionPayload {
-  mutation: MutationType;
-  node: ContactDetail;
-  updatedFields: String[];
-  previousValues: ContactDetailPreviousValues;
-}
-
-export interface ContactDetailSubscriptionPayloadPromise
-  extends Promise<ContactDetailSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ContactDetailPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ContactDetailPreviousValuesPromise>() => T;
-}
-
-export interface ContactDetailSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ContactDetailSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ContactDetailSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ContactDetailPreviousValuesSubscription>() => T;
-}
-
-export interface OrgUnitEdge {
-  node: OrgUnit;
-  cursor: String;
-}
-
-export interface OrgUnitEdgePromise extends Promise<OrgUnitEdge>, Fragmentable {
-  node: <T = OrgUnitPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OrgUnitEdgeSubscription
-  extends Promise<AsyncIterator<OrgUnitEdge>>,
-    Fragmentable {
-  node: <T = OrgUnitSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ContactDetailPreviousValues {
-  id: ID_Output;
-  value: String;
-}
-
-export interface ContactDetailPreviousValuesPromise
-  extends Promise<ContactDetailPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  value: () => Promise<String>;
-}
-
-export interface ContactDetailPreviousValuesSubscription
-  extends Promise<AsyncIterator<ContactDetailPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  value: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ContactDetailConnection {
+export interface CodeConnection {
   pageInfo: PageInfo;
-  edges: ContactDetailEdge[];
+  edges: CodeEdge[];
 }
 
-export interface ContactDetailConnectionPromise
-  extends Promise<ContactDetailConnection>,
+export interface CodeConnectionPromise
+  extends Promise<CodeConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ContactDetailEdge>>() => T;
-  aggregate: <T = AggregateContactDetailPromise>() => T;
+  edges: <T = FragmentableArray<CodeEdge>>() => T;
+  aggregate: <T = AggregateCodePromise>() => T;
 }
 
-export interface ContactDetailConnectionSubscription
-  extends Promise<AsyncIterator<ContactDetailConnection>>,
+export interface CodeConnectionSubscription
+  extends Promise<AsyncIterator<CodeConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ContactDetailEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateContactDetailSubscription>() => T;
-}
-
-export interface AggregateCodeValue {
-  count: Int;
-}
-
-export interface AggregateCodeValuePromise
-  extends Promise<AggregateCodeValue>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCodeValueSubscription
-  extends Promise<AsyncIterator<AggregateCodeValue>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Code {
-  id: ID_Output;
-  name?: String;
-  description?: String;
-}
-
-export interface CodePromise extends Promise<Code>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
-    where?: CodeValueWhereInput;
-    orderBy?: CodeValueOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface CodeSubscription
-  extends Promise<AsyncIterator<Code>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  codeValueId: <T = Promise<AsyncIterator<CodeValueSubscription>>>(args?: {
-    where?: CodeValueWhereInput;
-    orderBy?: CodeValueOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface CodeNullablePromise
-  extends Promise<Code | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
-    where?: CodeValueWhereInput;
-    orderBy?: CodeValueOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface OrgUnitPreviousValues {
-  id: ID_Output;
-  registeredName: String;
-  displayName: String;
-  address: String;
-}
-
-export interface OrgUnitPreviousValuesPromise
-  extends Promise<OrgUnitPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  registeredName: () => Promise<String>;
-  displayName: () => Promise<String>;
-  address: () => Promise<String>;
-}
-
-export interface OrgUnitPreviousValuesSubscription
-  extends Promise<AsyncIterator<OrgUnitPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  registeredName: () => Promise<AsyncIterator<String>>;
-  displayName: () => Promise<AsyncIterator<String>>;
-  address: () => Promise<AsyncIterator<String>>;
-}
-
-export interface OrgUnitSubscriptionPayload {
-  mutation: MutationType;
-  node: OrgUnit;
-  updatedFields: String[];
-  previousValues: OrgUnitPreviousValues;
-}
-
-export interface OrgUnitSubscriptionPayloadPromise
-  extends Promise<OrgUnitSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = OrgUnitPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = OrgUnitPreviousValuesPromise>() => T;
-}
-
-export interface OrgUnitSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<OrgUnitSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = OrgUnitSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = OrgUnitPreviousValuesSubscription>() => T;
-}
-
-export interface PostPreviousValues {
-  id: ID_Output;
-  published: Boolean;
-  title: String;
-  content: String;
-}
-
-export interface PostPreviousValuesPromise
-  extends Promise<PostPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  published: () => Promise<Boolean>;
-  title: () => Promise<String>;
-  content: () => Promise<String>;
-}
-
-export interface PostPreviousValuesSubscription
-  extends Promise<AsyncIterator<PostPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  published: () => Promise<AsyncIterator<Boolean>>;
-  title: () => Promise<AsyncIterator<String>>;
-  content: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CodeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCodeSubscription>() => T;
 }
 
 export interface User {
@@ -2140,20 +1591,251 @@ export interface UserNullablePromise
   isOrgUnitPrimaryContact: () => Promise<Boolean>;
 }
 
-export interface AggregateContactDetail {
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ContactDetail {
+  id: ID_Output;
+  value: String;
+}
+
+export interface ContactDetailPromise
+  extends Promise<ContactDetail>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  detailTypeId: <T = CodeValuePromise>() => T;
+  value: () => Promise<String>;
+}
+
+export interface ContactDetailSubscription
+  extends Promise<AsyncIterator<ContactDetail>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  user: <T = UserSubscription>() => T;
+  detailTypeId: <T = CodeValueSubscription>() => T;
+  value: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ContactDetailNullablePromise
+  extends Promise<ContactDetail | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  detailTypeId: <T = CodeValuePromise>() => T;
+  value: () => Promise<String>;
+}
+
+export interface AggregateUser {
   count: Int;
 }
 
-export interface AggregateContactDetailPromise
-  extends Promise<AggregateContactDetail>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateContactDetailSubscription
-  extends Promise<AsyncIterator<AggregateContactDetail>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface PostSubscriptionPayload {
+  mutation: MutationType;
+  node: Post;
+  updatedFields: String[];
+  previousValues: PostPreviousValues;
+}
+
+export interface PostSubscriptionPayloadPromise
+  extends Promise<PostSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = PostPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = PostPreviousValuesPromise>() => T;
+}
+
+export interface PostSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<PostSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = PostSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = PostPreviousValuesSubscription>() => T;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface Code {
+  id: ID_Output;
+  name?: String;
+  description?: String;
+}
+
+export interface CodePromise extends Promise<Code>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
+    where?: CodeValueWhereInput;
+    orderBy?: CodeValueOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface CodeSubscription
+  extends Promise<AsyncIterator<Code>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  codeValueId: <T = Promise<AsyncIterator<CodeValueSubscription>>>(args?: {
+    where?: CodeValueWhereInput;
+    orderBy?: CodeValueOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface CodeNullablePromise
+  extends Promise<Code | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
+    where?: CodeValueWhereInput;
+    orderBy?: CodeValueOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface PostEdge {
+  node: Post;
+  cursor: String;
+}
+
+export interface PostEdgePromise extends Promise<PostEdge>, Fragmentable {
+  node: <T = PostPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface PostEdgeSubscription
+  extends Promise<AsyncIterator<PostEdge>>,
+    Fragmentable {
+  node: <T = PostSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CodeSubscriptionPayload {
+  mutation: MutationType;
+  node: Code;
+  updatedFields: String[];
+  previousValues: CodePreviousValues;
+}
+
+export interface CodeSubscriptionPayloadPromise
+  extends Promise<CodeSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CodePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CodePreviousValuesPromise>() => T;
+}
+
+export interface CodeSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CodeSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CodeSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CodePreviousValuesSubscription>() => T;
 }
 
 export interface Post {
@@ -2188,13 +1870,636 @@ export interface PostNullablePromise
   content: () => Promise<String>;
 }
 
+export interface CodePreviousValues {
+  id: ID_Output;
+  name?: String;
+  description?: String;
+}
+
+export interface CodePreviousValuesPromise
+  extends Promise<CodePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+}
+
+export interface CodePreviousValuesSubscription
+  extends Promise<AsyncIterator<CodePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OrgUnitEdge {
+  node: OrgUnit;
+  cursor: String;
+}
+
+export interface OrgUnitEdgePromise extends Promise<OrgUnitEdge>, Fragmentable {
+  node: <T = OrgUnitPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OrgUnitEdgeSubscription
+  extends Promise<AsyncIterator<OrgUnitEdge>>,
+    Fragmentable {
+  node: <T = OrgUnitSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCodeValue {
+  count: Int;
+}
+
+export interface AggregateCodeValuePromise
+  extends Promise<AggregateCodeValue>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCodeValueSubscription
+  extends Promise<AsyncIterator<AggregateCodeValue>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface CodeValueSubscriptionPayload {
+  mutation: MutationType;
+  node: CodeValue;
+  updatedFields: String[];
+  previousValues: CodeValuePreviousValues;
+}
+
+export interface CodeValueSubscriptionPayloadPromise
+  extends Promise<CodeValueSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CodeValuePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CodeValuePreviousValuesPromise>() => T;
+}
+
+export interface CodeValueSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CodeValueSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CodeValueSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CodeValuePreviousValuesSubscription>() => T;
+}
+
+export interface OrgAccessTokensEdge {
+  node: OrgAccessTokens;
+  cursor: String;
+}
+
+export interface OrgAccessTokensEdgePromise
+  extends Promise<OrgAccessTokensEdge>,
+    Fragmentable {
+  node: <T = OrgAccessTokensPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OrgAccessTokensEdgeSubscription
+  extends Promise<AsyncIterator<OrgAccessTokensEdge>>,
+    Fragmentable {
+  node: <T = OrgAccessTokensSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CodeValuePreviousValues {
+  id: ID_Output;
+  name?: String;
+  description?: String;
+  sequenceOrder?: Int;
+}
+
+export interface CodeValuePreviousValuesPromise
+  extends Promise<CodeValuePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  sequenceOrder: () => Promise<Int>;
+}
+
+export interface CodeValuePreviousValuesSubscription
+  extends Promise<AsyncIterator<CodeValuePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  sequenceOrder: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OrgAccessTokens {
+  id: ID_Output;
+  token: String;
+}
+
+export interface OrgAccessTokensPromise
+  extends Promise<OrgAccessTokens>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  orgUnitId: <T = OrgUnitPromise>() => T;
+  userId: <T = UserPromise>() => T;
+  token: () => Promise<String>;
+}
+
+export interface OrgAccessTokensSubscription
+  extends Promise<AsyncIterator<OrgAccessTokens>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  orgUnitId: <T = OrgUnitSubscription>() => T;
+  userId: <T = UserSubscription>() => T;
+  token: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OrgAccessTokensNullablePromise
+  extends Promise<OrgAccessTokens | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  orgUnitId: <T = OrgUnitPromise>() => T;
+  userId: <T = UserPromise>() => T;
+  token: () => Promise<String>;
+}
+
+export interface CodeValueEdge {
+  node: CodeValue;
+  cursor: String;
+}
+
+export interface CodeValueEdgePromise
+  extends Promise<CodeValueEdge>,
+    Fragmentable {
+  node: <T = CodeValuePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CodeValueEdgeSubscription
+  extends Promise<AsyncIterator<CodeValueEdge>>,
+    Fragmentable {
+  node: <T = CodeValueSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ContactDetailEdge {
+  node: ContactDetail;
+  cursor: String;
+}
+
+export interface ContactDetailEdgePromise
+  extends Promise<ContactDetailEdge>,
+    Fragmentable {
+  node: <T = ContactDetailPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ContactDetailEdgeSubscription
+  extends Promise<AsyncIterator<ContactDetailEdge>>,
+    Fragmentable {
+  node: <T = ContactDetailSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ContactDetailSubscriptionPayload {
+  mutation: MutationType;
+  node: ContactDetail;
+  updatedFields: String[];
+  previousValues: ContactDetailPreviousValues;
+}
+
+export interface ContactDetailSubscriptionPayloadPromise
+  extends Promise<ContactDetailSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ContactDetailPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ContactDetailPreviousValuesPromise>() => T;
+}
+
+export interface ContactDetailSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ContactDetailSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ContactDetailSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ContactDetailPreviousValuesSubscription>() => T;
+}
+
+export interface CodeValue {
+  id: ID_Output;
+  name?: String;
+  description?: String;
+  sequenceOrder?: Int;
+}
+
+export interface CodeValuePromise extends Promise<CodeValue>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  sequenceOrder: () => Promise<Int>;
+  codeId: <T = CodePromise>() => T;
+}
+
+export interface CodeValueSubscription
+  extends Promise<AsyncIterator<CodeValue>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  sequenceOrder: () => Promise<AsyncIterator<Int>>;
+  codeId: <T = CodeSubscription>() => T;
+}
+
+export interface CodeValueNullablePromise
+  extends Promise<CodeValue | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  sequenceOrder: () => Promise<Int>;
+  codeId: <T = CodePromise>() => T;
+}
+
+export interface ContactDetailPreviousValues {
+  id: ID_Output;
+  value: String;
+}
+
+export interface ContactDetailPreviousValuesPromise
+  extends Promise<ContactDetailPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  value: () => Promise<String>;
+}
+
+export interface ContactDetailPreviousValuesSubscription
+  extends Promise<AsyncIterator<ContactDetailPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  value: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregatePost {
+  count: Int;
+}
+
+export interface AggregatePostPromise
+  extends Promise<AggregatePost>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregatePostSubscription
+  extends Promise<AsyncIterator<AggregatePost>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface CodeValueConnection {
+  pageInfo: PageInfo;
+  edges: CodeValueEdge[];
+}
+
+export interface CodeValueConnectionPromise
+  extends Promise<CodeValueConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CodeValueEdge>>() => T;
+  aggregate: <T = AggregateCodeValuePromise>() => T;
+}
+
+export interface CodeValueConnectionSubscription
+  extends Promise<AsyncIterator<CodeValueConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CodeValueEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCodeValueSubscription>() => T;
+}
+
+export interface AggregateOrgUnit {
+  count: Int;
+}
+
+export interface AggregateOrgUnitPromise
+  extends Promise<AggregateOrgUnit>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOrgUnitSubscription
+  extends Promise<AsyncIterator<AggregateOrgUnit>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OrgAccessTokensSubscriptionPayload {
+  mutation: MutationType;
+  node: OrgAccessTokens;
+  updatedFields: String[];
+  previousValues: OrgAccessTokensPreviousValues;
+}
+
+export interface OrgAccessTokensSubscriptionPayloadPromise
+  extends Promise<OrgAccessTokensSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OrgAccessTokensPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OrgAccessTokensPreviousValuesPromise>() => T;
+}
+
+export interface OrgAccessTokensSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OrgAccessTokensSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OrgAccessTokensSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OrgAccessTokensPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateOrgAccessTokens {
+  count: Int;
+}
+
+export interface AggregateOrgAccessTokensPromise
+  extends Promise<AggregateOrgAccessTokens>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOrgAccessTokensSubscription
+  extends Promise<AsyncIterator<AggregateOrgAccessTokens>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OrgAccessTokensPreviousValues {
+  id: ID_Output;
+  token: String;
+}
+
+export interface OrgAccessTokensPreviousValuesPromise
+  extends Promise<OrgAccessTokensPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+}
+
+export interface OrgAccessTokensPreviousValuesSubscription
+  extends Promise<AsyncIterator<OrgAccessTokensPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  token: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateContactDetail {
+  count: Int;
+}
+
+export interface AggregateContactDetailPromise
+  extends Promise<AggregateContactDetail>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateContactDetailSubscription
+  extends Promise<AsyncIterator<AggregateContactDetail>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface PostPreviousValues {
+  id: ID_Output;
+  published: Boolean;
+  title: String;
+  content: String;
+}
+
+export interface PostPreviousValuesPromise
+  extends Promise<PostPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  published: () => Promise<Boolean>;
+  title: () => Promise<String>;
+  content: () => Promise<String>;
+}
+
+export interface PostPreviousValuesSubscription
+  extends Promise<AsyncIterator<PostPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  published: () => Promise<AsyncIterator<Boolean>>;
+  title: () => Promise<AsyncIterator<String>>;
+  content: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CodeEdge {
+  node: Code;
+  cursor: String;
+}
+
+export interface CodeEdgePromise extends Promise<CodeEdge>, Fragmentable {
+  node: <T = CodePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CodeEdgeSubscription
+  extends Promise<AsyncIterator<CodeEdge>>,
+    Fragmentable {
+  node: <T = CodeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OrgUnitPreviousValues {
+  id: ID_Output;
+  registeredName: String;
+  displayName: String;
+  address: String;
+}
+
+export interface OrgUnitPreviousValuesPromise
+  extends Promise<OrgUnitPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  registeredName: () => Promise<String>;
+  displayName: () => Promise<String>;
+  address: () => Promise<String>;
+}
+
+export interface OrgUnitPreviousValuesSubscription
+  extends Promise<AsyncIterator<OrgUnitPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  registeredName: () => Promise<AsyncIterator<String>>;
+  displayName: () => Promise<AsyncIterator<String>>;
+  address: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OrgUnitSubscriptionPayload {
+  mutation: MutationType;
+  node: OrgUnit;
+  updatedFields: String[];
+  previousValues: OrgUnitPreviousValues;
+}
+
+export interface OrgUnitSubscriptionPayloadPromise
+  extends Promise<OrgUnitSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OrgUnitPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OrgUnitPreviousValuesPromise>() => T;
+}
+
+export interface OrgUnitSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OrgUnitSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OrgUnitSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OrgUnitPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateCode {
+  count: Int;
+}
+
+export interface AggregateCodePromise
+  extends Promise<AggregateCode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCodeSubscription
+  extends Promise<AsyncIterator<AggregateCode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface PostConnection {
+  pageInfo: PageInfo;
+  edges: PostEdge[];
+}
+
+export interface PostConnectionPromise
+  extends Promise<PostConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<PostEdge>>() => T;
+  aggregate: <T = AggregatePostPromise>() => T;
+}
+
+export interface PostConnectionSubscription
+  extends Promise<AsyncIterator<PostConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<PostEdgeSubscription>>>() => T;
+  aggregate: <T = AggregatePostSubscription>() => T;
+}
+
+export interface ContactDetailConnection {
+  pageInfo: PageInfo;
+  edges: ContactDetailEdge[];
+}
+
+export interface ContactDetailConnectionPromise
+  extends Promise<ContactDetailConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ContactDetailEdge>>() => T;
+  aggregate: <T = AggregateContactDetailPromise>() => T;
+}
+
+export interface ContactDetailConnectionSubscription
+  extends Promise<AsyncIterator<ContactDetailConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ContactDetailEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateContactDetailSubscription>() => T;
+}
+
+export interface OrgAccessTokensConnection {
+  pageInfo: PageInfo;
+  edges: OrgAccessTokensEdge[];
+}
+
+export interface OrgAccessTokensConnectionPromise
+  extends Promise<OrgAccessTokensConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OrgAccessTokensEdge>>() => T;
+  aggregate: <T = AggregateOrgAccessTokensPromise>() => T;
+}
+
+export interface OrgAccessTokensConnectionSubscription
+  extends Promise<AsyncIterator<OrgAccessTokensConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OrgAccessTokensEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOrgAccessTokensSubscription>() => T;
+}
+
+export interface OrgUnitConnection {
+  pageInfo: PageInfo;
+  edges: OrgUnitEdge[];
+}
+
+export interface OrgUnitConnectionPromise
+  extends Promise<OrgUnitConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OrgUnitEdge>>() => T;
+  aggregate: <T = AggregateOrgUnitPromise>() => T;
+}
+
+export interface OrgUnitConnectionSubscription
+  extends Promise<AsyncIterator<OrgUnitConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OrgUnitEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOrgUnitSubscription>() => T;
+}
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
+
 export type Long = string;
 
 /*
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 */
-export type ID_Input = string | number;
-export type ID_Output = string;
+export type Int = number;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -2202,14 +2507,10 @@ The `Boolean` scalar type represents `true` or `false`.
 export type Boolean = boolean;
 
 /*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 */
-export type String = string;
-
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-*/
-export type Int = number;
+export type ID_Input = string | number;
+export type ID_Output = string;
 
 /**
  * Model Metadata
@@ -2238,6 +2539,10 @@ export const models: Model[] = [
   },
   {
     name: "ContactDetail",
+    embedded: false
+  },
+  {
+    name: "OrgAccessTokens",
     embedded: false
   }
 ];

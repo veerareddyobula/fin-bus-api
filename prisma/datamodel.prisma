@@ -44,3 +44,10 @@ type ContactDetail {
   detailTypeId: CodeValue!
   value: String!
 }
+
+type OrgAccessTokens {
+  id: ID! @id
+  orgUnitId: OrgUnit
+  userId: User
+  token: String! @unique 
+}
