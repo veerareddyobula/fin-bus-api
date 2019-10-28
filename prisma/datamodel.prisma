@@ -7,8 +7,9 @@ type Post {
 
 type Code {
   id: ID! @id
-  name: String @unique
+  name: String
   description: String
+  genericId: Int @unique
   codeValueId: [CodeValue]
 }
 
@@ -17,6 +18,7 @@ type CodeValue {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int @unique
   codeId: Code!
 }
 

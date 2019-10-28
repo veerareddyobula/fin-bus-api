@@ -3,18 +3,22 @@ mutation {
     data: {
       name: "Contact Details Info",
       description: "This codeId refers with user contact info",
+      genericId: 100,
       codeValueId: {
         create: [{
           name: "Mobile Number",
           description: "User mobile number",
+          genericId: 1001,
           sequenceOrder: 1
         },{
           name: "Address",
           description: "User Address",
+          genericId: 1002,
           sequenceOrder: 2
         },{
           name: "About",
           description: "About User",
+          genericId: 1003,
           sequenceOrder: 3
         }]
       }

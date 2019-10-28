@@ -1,10 +1,8 @@
 const { GraphQLServer } = require("graphql-yoga");
 const { prisma } = require("./generated/prisma-client");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { APP_SECRET, getUserId } = require("./utils");
 require("dotenv").config();
 // const {signup, login,} = require("./resolvers/auth/Mutation")
+const {signup, signIn} = require("./resolvers/auth")
 
 const resolvers = {
   Query: {
@@ -18,6 +16,7 @@ const resolvers = {
       return context.prisma.post({ id });
     },
     codeByName: async (parent, args, context) => {
+      console.log('--== I am CodeByName ==--')
       const codes = await context.prisma.codes({ where: { name: args.name } });
       const code = codes[0];
       const codeValues = await context.prisma.codeValues({
@@ -43,41 +42,8 @@ const resolvers = {
         data: { published: true }
       });
     },
-    async signup(parent, args, context) {
-      console.log("--== signup args --== ", args);
-      const userBean = {
-        firstName: args.firstName,
-        lastName: args.lastName,
-        email: args.email,
-        password: args.password,
-        orgUnitId: {
-          create: {
-            registeredName: args.regOrgUnitName,
-            displayName: args.displayOrgUnitName,
-            address: args.orgUnitAddress
-          }
-        },
-        isOrgUnitPrimaryContact: true,
-        contactId: {
-          create: [
-            {
-              detailTypeId: {
-                connect: {
-                  id: "ck21y6tce0098081511p3r1v2"
-                }
-              },
-              value: args.mobileNumber
-            }
-          ]
-        }
-      };
-      const user = await context.prisma.createUser(userBean);
-      const token = jwt.sign({ userId: user.id }, APP_SECRET);
-      return {
-        token,
-        user
-      };
-    }
+    signup,
+    signIn
   }
 };
 

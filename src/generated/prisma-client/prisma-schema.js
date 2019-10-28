@@ -39,6 +39,7 @@ type Code {
   id: ID!
   name: String
   description: String
+  genericId: Int
   codeValueId(where: CodeValueWhereInput, orderBy: CodeValueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CodeValue!]
 }
 
@@ -52,6 +53,7 @@ input CodeCreateInput {
   id: ID
   name: String
   description: String
+  genericId: Int
   codeValueId: CodeValueCreateManyWithoutCodeIdInput
 }
 
@@ -64,6 +66,7 @@ input CodeCreateWithoutCodeValueIdInput {
   id: ID
   name: String
   description: String
+  genericId: Int
 }
 
 type CodeEdge {
@@ -78,12 +81,15 @@ enum CodeOrderByInput {
   name_DESC
   description_ASC
   description_DESC
+  genericId_ASC
+  genericId_DESC
 }
 
 type CodePreviousValues {
   id: ID!
   name: String
   description: String
+  genericId: Int
 }
 
 type CodeSubscriptionPayload {
@@ -107,12 +113,14 @@ input CodeSubscriptionWhereInput {
 input CodeUpdateInput {
   name: String
   description: String
+  genericId: Int
   codeValueId: CodeValueUpdateManyWithoutCodeIdInput
 }
 
 input CodeUpdateManyMutationInput {
   name: String
   description: String
+  genericId: Int
 }
 
 input CodeUpdateOneRequiredWithoutCodeValueIdInput {
@@ -125,6 +133,7 @@ input CodeUpdateOneRequiredWithoutCodeValueIdInput {
 input CodeUpdateWithoutCodeValueIdDataInput {
   name: String
   description: String
+  genericId: Int
 }
 
 input CodeUpsertWithoutCodeValueIdInput {
@@ -137,6 +146,7 @@ type CodeValue {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
   codeId: Code!
 }
 
@@ -151,6 +161,7 @@ input CodeValueCreateInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
   codeId: CodeCreateOneWithoutCodeValueIdInput!
 }
 
@@ -169,6 +180,7 @@ input CodeValueCreateWithoutCodeIdInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
 }
 
 type CodeValueEdge {
@@ -185,6 +197,8 @@ enum CodeValueOrderByInput {
   description_DESC
   sequenceOrder_ASC
   sequenceOrder_DESC
+  genericId_ASC
+  genericId_DESC
 }
 
 type CodeValuePreviousValues {
@@ -192,6 +206,7 @@ type CodeValuePreviousValues {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
 }
 
 input CodeValueScalarWhereInput {
@@ -245,6 +260,14 @@ input CodeValueScalarWhereInput {
   sequenceOrder_lte: Int
   sequenceOrder_gt: Int
   sequenceOrder_gte: Int
+  genericId: Int
+  genericId_not: Int
+  genericId_in: [Int!]
+  genericId_not_in: [Int!]
+  genericId_lt: Int
+  genericId_lte: Int
+  genericId_gt: Int
+  genericId_gte: Int
   AND: [CodeValueScalarWhereInput!]
   OR: [CodeValueScalarWhereInput!]
   NOT: [CodeValueScalarWhereInput!]
@@ -272,6 +295,7 @@ input CodeValueUpdateDataInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
   codeId: CodeUpdateOneRequiredWithoutCodeValueIdInput
 }
 
@@ -279,6 +303,7 @@ input CodeValueUpdateInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
   codeId: CodeUpdateOneRequiredWithoutCodeValueIdInput
 }
 
@@ -286,12 +311,14 @@ input CodeValueUpdateManyDataInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
 }
 
 input CodeValueUpdateManyMutationInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
 }
 
 input CodeValueUpdateManyWithoutCodeIdInput {
@@ -322,6 +349,7 @@ input CodeValueUpdateWithoutCodeIdDataInput {
   name: String
   description: String
   sequenceOrder: Int
+  genericId: Int
 }
 
 input CodeValueUpdateWithWhereUniqueWithoutCodeIdInput {
@@ -391,6 +419,14 @@ input CodeValueWhereInput {
   sequenceOrder_lte: Int
   sequenceOrder_gt: Int
   sequenceOrder_gte: Int
+  genericId: Int
+  genericId_not: Int
+  genericId_in: [Int!]
+  genericId_not_in: [Int!]
+  genericId_lt: Int
+  genericId_lte: Int
+  genericId_gt: Int
+  genericId_gte: Int
   codeId: CodeWhereInput
   AND: [CodeValueWhereInput!]
   OR: [CodeValueWhereInput!]
@@ -399,6 +435,7 @@ input CodeValueWhereInput {
 
 input CodeValueWhereUniqueInput {
   id: ID
+  genericId: Int
 }
 
 input CodeWhereInput {
@@ -444,6 +481,14 @@ input CodeWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  genericId: Int
+  genericId_not: Int
+  genericId_in: [Int!]
+  genericId_not_in: [Int!]
+  genericId_lt: Int
+  genericId_lte: Int
+  genericId_gt: Int
+  genericId_gte: Int
   codeValueId_every: CodeValueWhereInput
   codeValueId_some: CodeValueWhereInput
   codeValueId_none: CodeValueWhereInput
@@ -454,7 +499,7 @@ input CodeWhereInput {
 
 input CodeWhereUniqueInput {
   id: ID
-  name: String
+  genericId: Int
 }
 
 type ContactDetail {

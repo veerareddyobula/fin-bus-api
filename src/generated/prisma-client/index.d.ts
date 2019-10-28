@@ -355,7 +355,9 @@ export type CodeOrderByInput =
   | "name_ASC"
   | "name_DESC"
   | "description_ASC"
-  | "description_DESC";
+  | "description_DESC"
+  | "genericId_ASC"
+  | "genericId_DESC";
 
 export type ContactDetailOrderByInput =
   | "id_ASC"
@@ -371,7 +373,9 @@ export type CodeValueOrderByInput =
   | "description_ASC"
   | "description_DESC"
   | "sequenceOrder_ASC"
-  | "sequenceOrder_DESC";
+  | "sequenceOrder_DESC"
+  | "genericId_ASC"
+  | "genericId_DESC";
 
 export type OrgAccessTokensOrderByInput =
   | "id_ASC"
@@ -422,7 +426,7 @@ export interface CodeCreateOneWithoutCodeValueIdInput {
 
 export type CodeWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  name?: Maybe<String>;
+  genericId?: Maybe<Int>;
 }>;
 
 export interface ContactDetailCreateWithoutUserInput {
@@ -463,12 +467,14 @@ export interface PostSubscriptionWhereInput {
 
 export type CodeValueWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  genericId?: Maybe<Int>;
 }>;
 
 export interface CodeCreateInput {
   id?: Maybe<ID_Input>;
   name?: Maybe<String>;
   description?: Maybe<String>;
+  genericId?: Maybe<Int>;
   codeValueId?: Maybe<CodeValueCreateManyWithoutCodeIdInput>;
 }
 
@@ -505,6 +511,7 @@ export interface CodeValueCreateWithoutCodeIdInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -518,6 +525,7 @@ export interface UserUpdateManyMutationInput {
 export interface CodeUpdateInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
+  genericId?: Maybe<Int>;
   codeValueId?: Maybe<CodeValueUpdateManyWithoutCodeIdInput>;
 }
 
@@ -657,6 +665,7 @@ export interface CodeValueUpdateWithoutCodeIdDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
 }
 
 export interface OrgUnitUpdateManyMutationInput {
@@ -728,6 +737,14 @@ export interface CodeValueScalarWhereInput {
   sequenceOrder_lte?: Maybe<Int>;
   sequenceOrder_gt?: Maybe<Int>;
   sequenceOrder_gte?: Maybe<Int>;
+  genericId?: Maybe<Int>;
+  genericId_not?: Maybe<Int>;
+  genericId_in?: Maybe<Int[] | Int>;
+  genericId_not_in?: Maybe<Int[] | Int>;
+  genericId_lt?: Maybe<Int>;
+  genericId_lte?: Maybe<Int>;
+  genericId_gt?: Maybe<Int>;
+  genericId_gte?: Maybe<Int>;
   AND?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
   OR?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
   NOT?: Maybe<CodeValueScalarWhereInput[] | CodeValueScalarWhereInput>;
@@ -776,6 +793,14 @@ export interface CodeWhereInput {
   description_not_starts_with?: Maybe<String>;
   description_ends_with?: Maybe<String>;
   description_not_ends_with?: Maybe<String>;
+  genericId?: Maybe<Int>;
+  genericId_not?: Maybe<Int>;
+  genericId_in?: Maybe<Int[] | Int>;
+  genericId_not_in?: Maybe<Int[] | Int>;
+  genericId_lt?: Maybe<Int>;
+  genericId_lte?: Maybe<Int>;
+  genericId_gt?: Maybe<Int>;
+  genericId_gte?: Maybe<Int>;
   codeValueId_every?: Maybe<CodeValueWhereInput>;
   codeValueId_some?: Maybe<CodeValueWhereInput>;
   codeValueId_none?: Maybe<CodeValueWhereInput>;
@@ -798,6 +823,7 @@ export interface CodeValueUpdateManyDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
 }
 
 export type OrgUnitWhereUniqueInput = AtLeastOne<{
@@ -807,40 +833,12 @@ export type OrgUnitWhereUniqueInput = AtLeastOne<{
 export interface CodeUpdateManyMutationInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
+  genericId?: Maybe<Int>;
 }
 
-export interface ContactDetailScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  value?: Maybe<String>;
-  value_not?: Maybe<String>;
-  value_in?: Maybe<String[] | String>;
-  value_not_in?: Maybe<String[] | String>;
-  value_lt?: Maybe<String>;
-  value_lte?: Maybe<String>;
-  value_gt?: Maybe<String>;
-  value_gte?: Maybe<String>;
-  value_contains?: Maybe<String>;
-  value_not_contains?: Maybe<String>;
-  value_starts_with?: Maybe<String>;
-  value_not_starts_with?: Maybe<String>;
-  value_ends_with?: Maybe<String>;
-  value_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
-  OR?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
-  NOT?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+export interface ContactDetailUpdateManyWithWhereNestedInput {
+  where: ContactDetailScalarWhereInput;
+  data: ContactDetailUpdateManyDataInput;
 }
 
 export interface UserCreateInput {
@@ -854,9 +852,10 @@ export interface UserCreateInput {
   isOrgUnitPrimaryContact?: Maybe<Boolean>;
 }
 
-export interface ContactDetailUpdateWithoutUserDataInput {
-  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
-  value?: Maybe<String>;
+export interface ContactDetailUpsertWithWhereUniqueWithoutUserInput {
+  where: ContactDetailWhereUniqueInput;
+  update: ContactDetailUpdateWithoutUserDataInput;
+  create: ContactDetailCreateWithoutUserInput;
 }
 
 export interface UserCreateOneInput {
@@ -864,9 +863,9 @@ export interface UserCreateOneInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
-export interface ContactDetailUpdateWithWhereUniqueWithoutUserInput {
-  where: ContactDetailWhereUniqueInput;
-  data: ContactDetailUpdateWithoutUserDataInput;
+export interface ContactDetailUpdateWithoutUserDataInput {
+  detailTypeId?: Maybe<CodeValueUpdateOneRequiredInput>;
+  value?: Maybe<String>;
 }
 
 export interface CodeValueCreateInput {
@@ -874,7 +873,155 @@ export interface CodeValueCreateInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
   codeId: CodeCreateOneWithoutCodeValueIdInput;
+}
+
+export interface ContactDetailUpdateWithWhereUniqueWithoutUserInput {
+  where: ContactDetailWhereUniqueInput;
+  data: ContactDetailUpdateWithoutUserDataInput;
+}
+
+export interface OrgAccessTokensCreateInput {
+  id?: Maybe<ID_Input>;
+  orgUnitId?: Maybe<OrgUnitCreateOneInput>;
+  userId?: Maybe<UserCreateOneInput>;
+  token: String;
+}
+
+export interface UserUpdateDataInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
+  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface CodeCreateWithoutCodeValueIdInput {
+  id?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  genericId?: Maybe<Int>;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface CodeValueUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
+  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
+}
+
+export interface OrgAccessTokensUpdateInput {
+  orgUnitId?: Maybe<OrgUnitUpdateOneInput>;
+  userId?: Maybe<UserUpdateOneInput>;
+  token?: Maybe<String>;
+}
+
+export interface CodeUpdateOneRequiredWithoutCodeValueIdInput {
+  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
+  update?: Maybe<CodeUpdateWithoutCodeValueIdDataInput>;
+  upsert?: Maybe<CodeUpsertWithoutCodeValueIdInput>;
+  connect?: Maybe<CodeWhereUniqueInput>;
+}
+
+export interface OrgUnitSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OrgUnitWhereInput>;
+  AND?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+  OR?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+  NOT?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
+}
+
+export interface CodeUpdateWithoutCodeValueIdDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  genericId?: Maybe<Int>;
+}
+
+export interface CodeValueSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<CodeValueWhereInput>;
+  AND?: Maybe<
+    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
+  >;
+}
+
+export interface ContactDetailUpdateManyMutationInput {
+  value?: Maybe<String>;
+}
+
+export interface UserUpdateInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
+  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
+}
+
+export interface CodeValueUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
+}
+
+export interface PostUpdateManyMutationInput {
+  published?: Maybe<Boolean>;
+  title?: Maybe<String>;
+  content?: Maybe<String>;
+}
+
+export interface ContactDetailCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutContactIdInput;
+  detailTypeId: CodeValueCreateOneInput;
+  value: String;
+}
+
+export type OrgAccessTokensWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  token?: Maybe<String>;
+}>;
+
+export interface UserCreateOneWithoutContactIdInput {
+  create?: Maybe<UserCreateWithoutContactIdInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface OrgAccessTokensUpdateManyMutationInput {
+  token?: Maybe<String>;
+}
+
+export interface UserCreateWithoutContactIdInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  lastName: String;
+  email: String;
+  password: String;
+  orgUnitId: OrgUnitCreateOneInput;
+  isOrgUnitPrimaryContact?: Maybe<Boolean>;
 }
 
 export interface CodeValueWhereInput {
@@ -928,153 +1075,18 @@ export interface CodeValueWhereInput {
   sequenceOrder_lte?: Maybe<Int>;
   sequenceOrder_gt?: Maybe<Int>;
   sequenceOrder_gte?: Maybe<Int>;
+  genericId?: Maybe<Int>;
+  genericId_not?: Maybe<Int>;
+  genericId_in?: Maybe<Int[] | Int>;
+  genericId_not_in?: Maybe<Int[] | Int>;
+  genericId_lt?: Maybe<Int>;
+  genericId_lte?: Maybe<Int>;
+  genericId_gt?: Maybe<Int>;
+  genericId_gte?: Maybe<Int>;
   codeId?: Maybe<CodeWhereInput>;
   AND?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
   OR?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
   NOT?: Maybe<CodeValueWhereInput[] | CodeValueWhereInput>;
-}
-
-export interface OrgAccessTokensCreateInput {
-  id?: Maybe<ID_Input>;
-  orgUnitId?: Maybe<OrgUnitCreateOneInput>;
-  userId?: Maybe<UserCreateOneInput>;
-  token: String;
-}
-
-export interface UserUpdateDataInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
-  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface CodeCreateWithoutCodeValueIdInput {
-  id?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
-
-export interface CodeValueUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-  codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
-}
-
-export interface OrgAccessTokensUpdateInput {
-  orgUnitId?: Maybe<OrgUnitUpdateOneInput>;
-  userId?: Maybe<UserUpdateOneInput>;
-  token?: Maybe<String>;
-}
-
-export interface CodeUpdateOneRequiredWithoutCodeValueIdInput {
-  create?: Maybe<CodeCreateWithoutCodeValueIdInput>;
-  update?: Maybe<CodeUpdateWithoutCodeValueIdDataInput>;
-  upsert?: Maybe<CodeUpsertWithoutCodeValueIdInput>;
-  connect?: Maybe<CodeWhereUniqueInput>;
-}
-
-export interface OrgUnitSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OrgUnitWhereInput>;
-  AND?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-  OR?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-  NOT?: Maybe<OrgUnitSubscriptionWhereInput[] | OrgUnitSubscriptionWhereInput>;
-}
-
-export interface CodeUpdateWithoutCodeValueIdDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface CodeValueSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<CodeValueWhereInput>;
-  AND?: Maybe<
-    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    CodeValueSubscriptionWhereInput[] | CodeValueSubscriptionWhereInput
-  >;
-}
-
-export interface ContactDetailUpdateManyMutationInput {
-  value?: Maybe<String>;
-}
-
-export interface UserUpdateInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  orgUnitId?: Maybe<OrgUnitUpdateOneRequiredInput>;
-  contactId?: Maybe<ContactDetailUpdateManyWithoutUserInput>;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface CodeValueUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  sequenceOrder?: Maybe<Int>;
-}
-
-export interface PostUpdateManyMutationInput {
-  published?: Maybe<Boolean>;
-  title?: Maybe<String>;
-  content?: Maybe<String>;
-}
-
-export interface ContactDetailCreateInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutContactIdInput;
-  detailTypeId: CodeValueCreateOneInput;
-  value: String;
-}
-
-export type OrgAccessTokensWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  token?: Maybe<String>;
-}>;
-
-export interface UserCreateOneWithoutContactIdInput {
-  create?: Maybe<UserCreateWithoutContactIdInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface OrgAccessTokensUpdateManyMutationInput {
-  token?: Maybe<String>;
-}
-
-export interface UserCreateWithoutContactIdInput {
-  id?: Maybe<ID_Input>;
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
-  orgUnitId: OrgUnitCreateOneInput;
-  isOrgUnitPrimaryContact?: Maybe<Boolean>;
-}
-
-export interface ContactDetailUpdateManyWithWhereNestedInput {
-  where: ContactDetailScalarWhereInput;
-  data: ContactDetailUpdateManyDataInput;
 }
 
 export interface OrgUnitCreateOneInput {
@@ -1305,10 +1317,38 @@ export interface OrgUnitUpdateOneRequiredInput {
   connect?: Maybe<OrgUnitWhereUniqueInput>;
 }
 
-export interface ContactDetailUpsertWithWhereUniqueWithoutUserInput {
-  where: ContactDetailWhereUniqueInput;
-  update: ContactDetailUpdateWithoutUserDataInput;
-  create: ContactDetailCreateWithoutUserInput;
+export interface ContactDetailScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  value?: Maybe<String>;
+  value_not?: Maybe<String>;
+  value_in?: Maybe<String[] | String>;
+  value_not_in?: Maybe<String[] | String>;
+  value_lt?: Maybe<String>;
+  value_lte?: Maybe<String>;
+  value_gt?: Maybe<String>;
+  value_gte?: Maybe<String>;
+  value_contains?: Maybe<String>;
+  value_not_contains?: Maybe<String>;
+  value_starts_with?: Maybe<String>;
+  value_not_starts_with?: Maybe<String>;
+  value_ends_with?: Maybe<String>;
+  value_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+  OR?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
+  NOT?: Maybe<ContactDetailScalarWhereInput[] | ContactDetailScalarWhereInput>;
 }
 
 export interface OrgUnitUpdateDataInput {
@@ -1330,6 +1370,7 @@ export interface CodeValueUpdateDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   sequenceOrder?: Maybe<Int>;
+  genericId?: Maybe<Int>;
   codeId?: Maybe<CodeUpdateOneRequiredWithoutCodeValueIdInput>;
 }
 
@@ -1745,12 +1786,14 @@ export interface Code {
   id: ID_Output;
   name?: String;
   description?: String;
+  genericId?: Int;
 }
 
 export interface CodePromise extends Promise<Code>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   description: () => Promise<String>;
+  genericId: () => Promise<Int>;
   codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
     where?: CodeValueWhereInput;
     orderBy?: CodeValueOrderByInput;
@@ -1768,6 +1811,7 @@ export interface CodeSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
+  genericId: () => Promise<AsyncIterator<Int>>;
   codeValueId: <T = Promise<AsyncIterator<CodeValueSubscription>>>(args?: {
     where?: CodeValueWhereInput;
     orderBy?: CodeValueOrderByInput;
@@ -1785,6 +1829,7 @@ export interface CodeNullablePromise
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   description: () => Promise<String>;
+  genericId: () => Promise<Int>;
   codeValueId: <T = FragmentableArray<CodeValue>>(args?: {
     where?: CodeValueWhereInput;
     orderBy?: CodeValueOrderByInput;
@@ -1838,93 +1883,6 @@ export interface CodeSubscriptionPayloadSubscription
   previousValues: <T = CodePreviousValuesSubscription>() => T;
 }
 
-export interface Post {
-  id: ID_Output;
-  published: Boolean;
-  title: String;
-  content: String;
-}
-
-export interface PostPromise extends Promise<Post>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  published: () => Promise<Boolean>;
-  title: () => Promise<String>;
-  content: () => Promise<String>;
-}
-
-export interface PostSubscription
-  extends Promise<AsyncIterator<Post>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  published: () => Promise<AsyncIterator<Boolean>>;
-  title: () => Promise<AsyncIterator<String>>;
-  content: () => Promise<AsyncIterator<String>>;
-}
-
-export interface PostNullablePromise
-  extends Promise<Post | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  published: () => Promise<Boolean>;
-  title: () => Promise<String>;
-  content: () => Promise<String>;
-}
-
-export interface CodePreviousValues {
-  id: ID_Output;
-  name?: String;
-  description?: String;
-}
-
-export interface CodePreviousValuesPromise
-  extends Promise<CodePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-}
-
-export interface CodePreviousValuesSubscription
-  extends Promise<AsyncIterator<CodePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-}
-
-export interface OrgUnitEdge {
-  node: OrgUnit;
-  cursor: String;
-}
-
-export interface OrgUnitEdgePromise extends Promise<OrgUnitEdge>, Fragmentable {
-  node: <T = OrgUnitPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OrgUnitEdgeSubscription
-  extends Promise<AsyncIterator<OrgUnitEdge>>,
-    Fragmentable {
-  node: <T = OrgUnitSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateCodeValue {
-  count: Int;
-}
-
-export interface AggregateCodeValuePromise
-  extends Promise<AggregateCodeValue>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCodeValueSubscription
-  extends Promise<AsyncIterator<AggregateCodeValue>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
 export interface UserSubscriptionPayload {
   mutation: MutationType;
   node: User;
@@ -1948,6 +1906,84 @@ export interface UserSubscriptionPayloadSubscription
   node: <T = UserSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
   previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface CodePreviousValues {
+  id: ID_Output;
+  name?: String;
+  description?: String;
+  genericId?: Int;
+}
+
+export interface CodePreviousValuesPromise
+  extends Promise<CodePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  genericId: () => Promise<Int>;
+}
+
+export interface CodePreviousValuesSubscription
+  extends Promise<AsyncIterator<CodePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  genericId: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateOrgUnit {
+  count: Int;
+}
+
+export interface AggregateOrgUnitPromise
+  extends Promise<AggregateOrgUnit>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOrgUnitSubscription
+  extends Promise<AsyncIterator<AggregateOrgUnit>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateCodeValue {
+  count: Int;
+}
+
+export interface AggregateCodeValuePromise
+  extends Promise<AggregateCodeValue>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCodeValueSubscription
+  extends Promise<AsyncIterator<AggregateCodeValue>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OrgUnitConnection {
+  pageInfo: PageInfo;
+  edges: OrgUnitEdge[];
+}
+
+export interface OrgUnitConnectionPromise
+  extends Promise<OrgUnitConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OrgUnitEdge>>() => T;
+  aggregate: <T = AggregateOrgUnitPromise>() => T;
+}
+
+export interface OrgUnitConnectionSubscription
+  extends Promise<AsyncIterator<OrgUnitConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OrgUnitEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOrgUnitSubscription>() => T;
 }
 
 export interface CodeValueSubscriptionPayload {
@@ -1999,6 +2035,7 @@ export interface CodeValuePreviousValues {
   name?: String;
   description?: String;
   sequenceOrder?: Int;
+  genericId?: Int;
 }
 
 export interface CodeValuePreviousValuesPromise
@@ -2008,6 +2045,7 @@ export interface CodeValuePreviousValuesPromise
   name: () => Promise<String>;
   description: () => Promise<String>;
   sequenceOrder: () => Promise<Int>;
+  genericId: () => Promise<Int>;
 }
 
 export interface CodeValuePreviousValuesSubscription
@@ -2017,6 +2055,7 @@ export interface CodeValuePreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   sequenceOrder: () => Promise<AsyncIterator<Int>>;
+  genericId: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface OrgAccessTokens {
@@ -2119,6 +2158,7 @@ export interface CodeValue {
   name?: String;
   description?: String;
   sequenceOrder?: Int;
+  genericId?: Int;
 }
 
 export interface CodeValuePromise extends Promise<CodeValue>, Fragmentable {
@@ -2126,6 +2166,7 @@ export interface CodeValuePromise extends Promise<CodeValue>, Fragmentable {
   name: () => Promise<String>;
   description: () => Promise<String>;
   sequenceOrder: () => Promise<Int>;
+  genericId: () => Promise<Int>;
   codeId: <T = CodePromise>() => T;
 }
 
@@ -2136,6 +2177,7 @@ export interface CodeValueSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   sequenceOrder: () => Promise<AsyncIterator<Int>>;
+  genericId: () => Promise<AsyncIterator<Int>>;
   codeId: <T = CodeSubscription>() => T;
 }
 
@@ -2146,6 +2188,7 @@ export interface CodeValueNullablePromise
   name: () => Promise<String>;
   description: () => Promise<String>;
   sequenceOrder: () => Promise<Int>;
+  genericId: () => Promise<Int>;
   codeId: <T = CodePromise>() => T;
 }
 
@@ -2205,20 +2248,36 @@ export interface CodeValueConnectionSubscription
   aggregate: <T = AggregateCodeValueSubscription>() => T;
 }
 
-export interface AggregateOrgUnit {
-  count: Int;
+export interface Post {
+  id: ID_Output;
+  published: Boolean;
+  title: String;
+  content: String;
 }
 
-export interface AggregateOrgUnitPromise
-  extends Promise<AggregateOrgUnit>,
-    Fragmentable {
-  count: () => Promise<Int>;
+export interface PostPromise extends Promise<Post>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  published: () => Promise<Boolean>;
+  title: () => Promise<String>;
+  content: () => Promise<String>;
 }
 
-export interface AggregateOrgUnitSubscription
-  extends Promise<AsyncIterator<AggregateOrgUnit>>,
+export interface PostSubscription
+  extends Promise<AsyncIterator<Post>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  published: () => Promise<AsyncIterator<Boolean>>;
+  title: () => Promise<AsyncIterator<String>>;
+  content: () => Promise<AsyncIterator<String>>;
+}
+
+export interface PostNullablePromise
+  extends Promise<Post | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  published: () => Promise<Boolean>;
+  title: () => Promise<String>;
+  content: () => Promise<String>;
 }
 
 export interface OrgAccessTokensSubscriptionPayload {
@@ -2468,38 +2527,34 @@ export interface OrgAccessTokensConnectionSubscription
   aggregate: <T = AggregateOrgAccessTokensSubscription>() => T;
 }
 
-export interface OrgUnitConnection {
-  pageInfo: PageInfo;
-  edges: OrgUnitEdge[];
+export interface OrgUnitEdge {
+  node: OrgUnit;
+  cursor: String;
 }
 
-export interface OrgUnitConnectionPromise
-  extends Promise<OrgUnitConnection>,
+export interface OrgUnitEdgePromise extends Promise<OrgUnitEdge>, Fragmentable {
+  node: <T = OrgUnitPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OrgUnitEdgeSubscription
+  extends Promise<AsyncIterator<OrgUnitEdge>>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<OrgUnitEdge>>() => T;
-  aggregate: <T = AggregateOrgUnitPromise>() => T;
+  node: <T = OrgUnitSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
-
-export interface OrgUnitConnectionSubscription
-  extends Promise<AsyncIterator<OrgUnitConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<OrgUnitEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateOrgUnitSubscription>() => T;
-}
-
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
-
-export type Long = string;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 */
 export type Int = number;
+
+export type Long = string;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.

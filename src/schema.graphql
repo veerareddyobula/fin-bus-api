@@ -17,7 +17,7 @@ type Mutation {
     		,email: String!
     		,password: String!
     		,mobileNumber:  String!): AuthPayload
-  # login(email: String!, password: String!): AuthPayload
+  signIn(email: String!, password: String!): AuthPayload
 }
 
 type AuthPayload {
